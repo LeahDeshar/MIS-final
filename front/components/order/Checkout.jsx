@@ -15,6 +15,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet/src";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import AppCheckBox from "../AppCheckBox";
+import Footer from "../layout/Footer";
 const Checkout = () => {
   const navigation = useNavigation();
   const paymentMethods = [
@@ -94,6 +95,10 @@ const Checkout = () => {
                 >
                   <Text style={styles.btnCheckoutText}>CHECKOUT</Text>
                 </TouchableOpacity>
+              </View>
+
+              <View style={{ top: 380 }}>
+                <Footer />
               </View>
             </>
           )}

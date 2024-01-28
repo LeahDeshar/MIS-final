@@ -49,19 +49,20 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="language"
-            component={Language}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
             name="home"
             component={Home}
             options={{
               headerShown: false,
             }}
           />
+          {/* <Stack.Screen
+            name="language"
+            component={Language}
+            options={{
+              headerShown: false,
+            }}
+          /> */}
+
           <Stack.Screen name="Featured" component={AllFeatures} />
           <Stack.Screen name="All Category" component={AllCategory} />
           <Stack.Screen name="Search Filter" component={FilterSearch} />
