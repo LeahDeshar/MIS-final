@@ -1,14 +1,20 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import React from "react";
 import Layout from "../../components/layout/Layout";
 import Footer from "../../components/layout/Footer";
+import Login from "../../components/auth/Login";
+import Screen from "../../components/Screen";
+import { useNavigation } from "@react-navigation/native";
 
 const Notifications = () => {
+  const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <Text>Notification</Text>
-      </View>
+      </View> */}
+
+      <Button title="Login" onPress={() => navigation.navigate("login")} />
       <View style={styles.footerContainer}>
         <Footer />
       </View>
