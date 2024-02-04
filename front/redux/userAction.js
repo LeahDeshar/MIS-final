@@ -1,12 +1,11 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { server } from "./store";
-import { useReduxStateHook } from "./customHook";
 
 // action login
 export const login = (email, password) => async (dispatch) => {
   try {
-    console.log(email, password);
+    console.log("action", email, password);
     dispatch({
       type: "loginRequest",
     });
@@ -22,10 +21,12 @@ export const login = (email, password) => async (dispatch) => {
     );
     console.log(data);
     dispatch({
-      type: "logingSucess",
+      type: "loginSuccess",
       payload: data,
     });
     await AsyncStorage.setItem("@auth", data?.token);
+    const stringifiedCurUser = JSON.stringify(data?.user);
+    await AsyncStorage.setItem("@user", stringifiedCurUser);
   } catch (error) {
     dispatch({
       type: "loginFail",
@@ -48,13 +49,13 @@ export const register = (formData) => async (dispatch) => {
     });
     dispatch({
       type: "registerSucess",
-      payload: data.message,
+      payload: data.msg,
     });
   } catch (error) {
     console.log(error);
     dispatch({
       type: "registerFail",
-      payload: error.response.data.message,
+      payload: error.response.data.msg,
     });
   }
 };

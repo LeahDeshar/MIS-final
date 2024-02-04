@@ -14,7 +14,10 @@ const Notifications = () => {
         <Text>Notification</Text>
       </View> */}
 
-      <Button title="Login" onPress={() => navigation.navigate("login")} />
+      <Button
+        title="register"
+        onPress={() => navigation.navigate("register")}
+      />
       <View style={styles.footerContainer}>
         <Footer />
       </View>

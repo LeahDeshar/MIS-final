@@ -1,21 +1,24 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchDataFromStorage } from "../components/auth/localstorage";
 export const useReduxStateHook = (navigation, path = "login") => {
-  const { loading, error, message } = useSelector((state) => state.user);
+  const { loading, error, msg } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (error) {
       alert(error);
       dispatch({ type: "clearError" });
     }
-    if (message) {
-      alert(message);
+    if (msg) {
+      alert(msg);
       dispatch({ type: "clearMessage" });
       navigation.reset({
         index: 0,
         routes: [{ name: path }],
       });
+      fetchDataFromStorage();
     }
-  }, [error, dispatch, message]);
+  }, [error, dispatch, msg]);
   return loading;
 };

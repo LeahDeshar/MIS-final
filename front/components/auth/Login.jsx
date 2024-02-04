@@ -25,14 +25,11 @@ const Login = () => {
       return alert("Please enter your information");
     }
     dispatch(login(email, password));
-    console.log(email, password);
-    // navigation.navigate("home");
   };
   return (
     <Screen style={styles.container}>
       <View>
         {loading && <Text>loading ...</Text>}
-        {/* <Image source={require("../../assets/login.png")} style={styles.image} /> */}
 
         <InputBox
           placeholder={"Enter Your Email"}

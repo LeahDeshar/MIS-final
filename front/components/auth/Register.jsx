@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import InputBox from "./InputBox";
 import { register } from "../../redux/userAction";
 import { useDispatch } from "react-redux";
+import { useReduxStateHook } from "../../redux/customHook";
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -21,11 +22,12 @@ const Register = ({ navigation }) => {
       password,
       name,
       address,
-      contact,
+      phone: contact,
     };
     dispatch(register(formData));
-    navigation.navigate("login");
+    // navigation.navigate("login");
   };
+  const loading = useReduxStateHook(navigation, "login");
   return (
     <View style={styles.container}>
       {/* <Image source={require("../../assets/login.png")} style={styles.image} /> */}

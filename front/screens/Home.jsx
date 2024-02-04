@@ -13,10 +13,12 @@ import Recommend from "../components/recommend/Recommend";
 import Tail from "../components/recommend/Tail";
 import Footer from "../components/layout/Footer";
 import DashBoard from "../components/seller/DashBoard";
+import { fetchDataFromStorage } from "../components/auth/localstorage";
 
 const Home = () => {
   // const user = 'seller'
   const user = "buyer";
+  fetchDataFromStorage();
 
   return (
     <View style={styles.container}>

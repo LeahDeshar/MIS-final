@@ -49,8 +49,8 @@ const App = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
@@ -161,8 +161,8 @@ const App = () => {
             <Stack.Screen name="MyProDet" component={MyProductDetail} />
           </Stack.Navigator>
         </NavigationContainer>
-      </Provider>
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
+    </Provider>
   );
 };
 

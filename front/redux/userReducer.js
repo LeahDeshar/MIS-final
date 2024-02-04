@@ -5,9 +5,10 @@ export const userReducer = createReducer({ token: null }, (builder) => {
   builder.addCase("loginRequest", (state, action) => {
     state.loading = true;
   });
-  builder.addCase("logingSucess", (state, action) => {
+  builder.addCase("loginSuccess", (state, action) => {
     state.loading = false;
-    state.message = action.payload.message;
+    state.msg = action.payload.msg;
+    console.log("reducer", state.msg);
     state.isAuth = true;
     state.token = action.payload.token;
   });
@@ -20,7 +21,7 @@ export const userReducer = createReducer({ token: null }, (builder) => {
     state.error = null;
   });
   builder.addCase("clearMessage", (state) => {
-    state.message = null;
+    state.msg = null;
   });
   //REGISTER
   builder.addCase("registerRequest", (state, action) => {
@@ -29,7 +30,7 @@ export const userReducer = createReducer({ token: null }, (builder) => {
   builder.addCase("registerSucess", (state, action) => {
     state.loading = false;
     // state.isAuth = true;
-    state.message = action.payload;
+    state.msg = action.payload;
   });
   builder.addCase("registerFail", (state, action) => {
     state.isAuth = false;
@@ -56,7 +57,7 @@ export const userReducer = createReducer({ token: null }, (builder) => {
     state.loading = false;
     state.isAuth = false;
     state.user = null;
-    state.message = action.payload;
+    state.msg = action.payload;
   });
   builder.addCase("logoutFail", (state, action) => {
     state.isAuth = false;
