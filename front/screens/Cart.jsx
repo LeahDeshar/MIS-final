@@ -7,22 +7,24 @@ import CartItem from "../components/cart/CartItem";
 import { ScrollView } from "react-native";
 import SellerOrderPlacementScreen from "../components/order/SellerOrderPlacementScreen ";
 import OrderDetails from "../components/order/OrderDetails";
+import { useSelector } from "react-redux";
 
 const Cart = ({ navigation, route }) => {
   const { params } = route;
-  console.log(params);
-  const [cartItems, setCartItem] = useState(CartData);
+
+  const cart = useSelector((state) => state.products.cart);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>
-        {cartItems?.length > 0
-          ? `You have ${cartItems?.length} items in the cart`
+        {cart?.length > 0
+          ? `You have ${cart?.length} items in the cart`
           : "Your cart is empty!"}
       </Text>
-      {cartItems?.length && (
+      {cart?.length && (
         <>
           <ScrollView>
-            {cartItems?.map((item) => (
+            {cart?.map((item) => (
               <CartItem item={item} key={item._id} />
             ))}
           </ScrollView>

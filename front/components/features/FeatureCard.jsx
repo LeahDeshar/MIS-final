@@ -1,7 +1,15 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addProductToCart,
+  toggleBookmark,
+  loadCart,
+  removeProductFromCart,
+} from "../../redux/productReducer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const FeatureCard = ({ product, cardWidth, imgWidth }) => {
   const navigation = useNavigation();
@@ -9,9 +17,19 @@ const FeatureCard = ({ product, cardWidth, imgWidth }) => {
 
   const handleBookmark = () => {
     setBookmark(!isBookmarked);
+    if (!isBookmarked) {
+      console.log("add to cart");
+      dispatch(addProductToCart({ product }));
+      dispatch(toggleBookmark({ product }));
+    } else {
+      console.log("remove");
+      dispatch(removeProductFromCart({ product }));
+      dispatch(toggleBookmark({ product }));
+    }
   };
   const { _id, name, description, image, price, rating } = product;
 
+  const dispatch = useDispatch();
   return (
     <TouchableOpacity
       style={[styles.card, { width: cardWidth }]}
@@ -59,7 +77,6 @@ const FeatureCard = ({ product, cardWidth, imgWidth }) => {
         </TouchableOpacity>
         <View style={styles.detailText}>
           <Text style={styles.cardTitle}>{name}</Text>
-          {/* <Text style={styles.cardDesc}>{description?.split(".")[0]}</Text> */}
           <Text style={{ fontSize: 17, marginTop: 5 }}>Rs.{price}</Text>
         </View>
       </View>
