@@ -33,19 +33,8 @@ const productSlice = createSlice({
     },
     addProductToCart: (state, action) => {
       const { product } = action.payload;
-      console.log("product", product);
-      // state.cart.push(product);
-
-      const existingProductIndex = state.cart.findIndex(
-        (item) => item._id === product._id
-      );
-      if (existingProductIndex !== -1) {
-        // If it exists, update the quantity
-        state.cart[existingProductIndex].quantity += 1;
-      } else {
-        // If not, add the product to the cart with quantity 1
-        state.cart.push({ ...product, quantity: 1 });
-      }
+      console.log("product", product._id);
+      state.cart.push(product);
 
       saveCartToStorage(state.cart);
       loadCartFromStorage();

@@ -1,18 +1,18 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 
-const CartItem = ({ item, onUpdateQuantity }) => {
-  const [qty, setQty] = useState(item.quantity || 1);
+const CartItem = ({ item }) => {
+  const [qty, setQty] = useState(1);
   const handleAddQty = () => {
     if (qty === 10) return alert("You can't add more than 10 quantity");
     setQty((prev) => prev + 1);
-    onUpdateQuantity(item._id, qty + 1);
+    // onUpdateQuantity(item._id, qty + 1);
   };
 
   const handleRemoveQty = () => {
     if (qty <= 1) return;
     setQty((prev) => prev - 1);
-    onUpdateQuantity(item._id, qty - 1);
+    // onUpdateQuantity(item._id, qty - 1);
   };
 
   return (

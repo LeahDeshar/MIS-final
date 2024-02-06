@@ -11,21 +11,7 @@ import { useSelector } from "react-redux";
 
 const Cart = ({ navigation, route }) => {
   const { params } = route;
-  const [carts, setCart] = useState([]);
   const cart = useSelector((state) => state.products.cart);
-  const updateQuantity = (productId, newQty) => {
-    const updatedCart = carts.map((item) => {
-      if (item._id === productId) {
-        return { ...item, quantity: newQty };
-      }
-      return item;
-    });
-    setCart(updatedCart);
-  };
-
-  const calculateTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
 
   return (
     <View style={styles.container}>
@@ -39,11 +25,7 @@ const Cart = ({ navigation, route }) => {
           <>
             <ScrollView>
               {cart?.map((item) => (
-                <CartItem
-                  item={item}
-                  key={item._id}
-                  onUpdateQuantity={updateQuantity}
-                />
+                <CartItem item={item} key={item._id} />
               ))}
             </ScrollView>
 
@@ -52,7 +34,7 @@ const Cart = ({ navigation, route }) => {
               <PriceTable price={999} title={"Tax"} />
               <PriceTable price={999} title={"Shipping"} />
               <View style={styles.grandTotal}>
-                <PriceTable title={"Net Total"} price={calculateTotalPrice()} />
+                <PriceTable title={"Net Total"} price={900} />
               </View>
               <TouchableOpacity
                 style={styles.btnCheckout}
