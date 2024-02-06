@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
-import { CartData } from "../../data/CartData";
+// import { CartData } from "../../data/CartData";
 import CartItem from "../cart/CartItem";
 import PriceTable from "../cart/PriceTable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -16,6 +16,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import AppCheckBox from "../AppCheckBox";
 import Footer from "../layout/Footer";
+import { useSelector } from "react-redux";
 const Checkout = () => {
   const navigation = useNavigation();
   const paymentMethods = [
@@ -45,6 +46,8 @@ const Checkout = () => {
   const handleShipCloseModalPress = () => {
     BottomShipRef.current.close();
   };
+
+  const cartData = useSelector((state) => state.products.cart);
   return (
     <View style={{ paddingHorizontal: 15, flex: 1 }}>
       <BottomSheetModalProvider>
@@ -72,10 +75,10 @@ const Checkout = () => {
             <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
           </TouchableOpacity>
 
-          {CartData?.length && (
+          {cartData && (
             <>
               <ScrollView>
-                {CartData?.map((item) => (
+                {cartData?.map((item) => (
                   <CartItem item={item} key={item._id} />
                 ))}
               </ScrollView>

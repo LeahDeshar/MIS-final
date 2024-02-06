@@ -21,6 +21,7 @@ const FeatureCard = ({ product, cardWidth, imgWidth }) => {
       console.log("add to cart");
       dispatch(addProductToCart({ product }));
       dispatch(toggleBookmark({ product }));
+      navigation.navigate("Cart");
     } else {
       console.log("remove");
       dispatch(removeProductFromCart({ product }));

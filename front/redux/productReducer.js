@@ -33,7 +33,20 @@ const productSlice = createSlice({
     },
     addProductToCart: (state, action) => {
       const { product } = action.payload;
-      state.cart.push(product);
+      console.log("product", product);
+      // state.cart.push(product);
+
+      const existingProductIndex = state.cart.findIndex(
+        (item) => item._id === product._id
+      );
+      if (existingProductIndex !== -1) {
+        // If it exists, update the quantity
+        state.cart[existingProductIndex].quantity += 1;
+      } else {
+        // If not, add the product to the cart with quantity 1
+        state.cart.push({ ...product, quantity: 1 });
+      }
+
       saveCartToStorage(state.cart);
       loadCartFromStorage();
     },
@@ -45,7 +58,6 @@ const productSlice = createSlice({
       loadCartFromStorage();
     },
     toggleBookmark: (state, action) => {
-      console.log(action.payload.product._id);
       const { _id } = action.payload.product;
       const productIndex = state.products.findIndex(
         (product) => product._id === _id

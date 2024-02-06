@@ -11,8 +11,21 @@ import { useSelector } from "react-redux";
 
 const Cart = ({ navigation, route }) => {
   const { params } = route;
-
+  const [carts, setCart] = useState([]);
   const cart = useSelector((state) => state.products.cart);
+  const updateQuantity = (productId, newQty) => {
+    const updatedCart = carts.map((item) => {
+      if (item._id === productId) {
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    });
+    setCart(updatedCart);
+  };
+
+  const calculateTotalPrice = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
 
   return (
     <View style={styles.container}>
@@ -21,30 +34,36 @@ const Cart = ({ navigation, route }) => {
           ? `You have ${cart?.length} items in the cart`
           : "Your cart is empty!"}
       </Text>
-      {cart?.length && (
-        <>
-          <ScrollView>
-            {cart?.map((item) => (
-              <CartItem item={item} key={item._id} />
-            ))}
-          </ScrollView>
+      <View>
+        {cart && (
+          <>
+            <ScrollView>
+              {cart?.map((item) => (
+                <CartItem
+                  item={item}
+                  key={item._id}
+                  onUpdateQuantity={updateQuantity}
+                />
+              ))}
+            </ScrollView>
 
-          <View>
-            <PriceTable price={999} title={"Price"} />
-            <PriceTable price={999} title={"Tax"} />
-            <PriceTable price={999} title={"Shipping"} />
-            <View style={styles.grandTotal}>
-              <PriceTable title={"Net Total"} price={2000} />
+            <View>
+              <PriceTable price={999} title={"Price"} />
+              <PriceTable price={999} title={"Tax"} />
+              <PriceTable price={999} title={"Shipping"} />
+              <View style={styles.grandTotal}>
+                <PriceTable title={"Net Total"} price={calculateTotalPrice()} />
+              </View>
+              <TouchableOpacity
+                style={styles.btnCheckout}
+                onPress={() => navigation.navigate("Confirmation")}
+              >
+                <Text style={styles.btnCheckoutText}>CHECKOUT</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.btnCheckout}
-              onPress={() => navigation.navigate("Confirmation")}
-            >
-              <Text style={styles.btnCheckoutText}>CHECKOUT</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
+          </>
+        )}
+      </View>
     </View>
   );
 };
