@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import React, { useState } from "react";
 import Layout from "../components/layout/Layout";
 import { CartData } from "../data/CartData";
@@ -12,7 +12,21 @@ import { useSelector } from "react-redux";
 const Cart = ({ navigation, route }) => {
   const { params } = route;
   const cart = useSelector((state) => state.products.cart);
+  const totalPrice = cart?.reduce(
+    (acc, cur) => acc + Number(cur.totalPrice),
+    0
+  );
 
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      Alert.alert(
+        "Your cart is empty!",
+        "Please add some items to cart to proceed to checkout"
+      );
+      return;
+    }
+    navigation.navigate("Confirmation");
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>
@@ -30,15 +44,12 @@ const Cart = ({ navigation, route }) => {
             </ScrollView>
 
             <View>
-              <PriceTable price={999} title={"Price"} />
-              <PriceTable price={999} title={"Tax"} />
-              <PriceTable price={999} title={"Shipping"} />
               <View style={styles.grandTotal}>
-                <PriceTable title={"Net Total"} price={900} />
+                <PriceTable title={"Net Total"} price={totalPrice} />
               </View>
               <TouchableOpacity
                 style={styles.btnCheckout}
-                onPress={() => navigation.navigate("Confirmation")}
+                onPress={handleCheckout}
               >
                 <Text style={styles.btnCheckoutText}>CHECKOUT</Text>
               </TouchableOpacity>

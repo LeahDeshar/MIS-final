@@ -26,6 +26,11 @@ const productSlice = createSlice({
   initialState: {
     products: [],
     cart: [],
+    total: [],
+    tax: 0.1,
+    shipping: 0,
+    netTotal: 0,
+    location: "",
   },
   reducers: {
     loadCart: (state, action) => {
@@ -34,7 +39,17 @@ const productSlice = createSlice({
     addProductToCart: (state, action) => {
       const { product } = action.payload;
       console.log("product", product._id);
-      state.cart.push(product);
+
+      state.cart.push({
+        ...product,
+        totalPrice: product.price,
+        orderQty: 1,
+      });
+      state.total.push({
+        _id: product._id,
+        totalPrice: product.price,
+        orderQty: 1,
+      });
 
       saveCartToStorage(state.cart);
       loadCartFromStorage();
@@ -56,6 +71,51 @@ const productSlice = createSlice({
           !state.products[productIndex].isBookmarked;
       }
     },
+    setQuantity: (state, action) => {
+      const { _id, orderQty, price } = action.payload;
+      // console.log("cart", state.cart.orderQty);
+      state.cart.forEach((item) => {
+        if (item._id == _id) {
+          console.log("orderqty", item.orderQty);
+          item.orderQty = orderQty;
+          item.totalPrice = price * orderQty;
+        }
+      });
+      console.log(_id, orderQty, price);
+      console.log("total", state.cart);
+      saveCartToStorage(state.cart);
+      loadCartFromStorage();
+    },
+    setShipping: (state, action) => {
+      const shippMethod = action.payload;
+
+      if (shippMethod == "out") {
+        return { ...state, shipping: 200 };
+      } else if (shippMethod == "in") {
+        return { ...state, shipping: 10 };
+      }
+      console.log(state.shipping, "shipping state");
+      return state;
+    },
+    calculateTotal: (state, action) => {
+      const total = state.cart.reduce(
+        (acc, cur) => acc + Number(cur.totalPrice),
+        0
+      );
+      return total;
+    },
+    calculateNetTotal: (state, action) => {
+      const total = state.cart.reduce(
+        (acc, cur) => acc + Number(cur.totalPrice),
+        0
+      );
+      state.netTotal = total + total * state.tax + state.shipping;
+      console.log(state.netTotal, "netTotal");
+    },
+    setGlobalLocation: (state, action) => {
+      console.log(action.payload, "location payload");
+      state.location = action.payload;
+    },
   },
 });
 
@@ -64,5 +124,21 @@ export const {
   addProductToCart,
   removeProductFromCart,
   toggleBookmark,
+  setQuantity,
+  setShipping,
+  calculateNetTotal,
+  calculateTotal,
+  setGlobalLocation,
 } = productSlice.actions;
 export default productSlice.reducer;
+
+// export const totalPrice = state.products.cart.reduce(
+//   (acc, cur) => acc + Number(cur.totalPrice),
+//   0
+// );
+
+// const calculateNetTotal = () => {
+//   let total =
+//     totalPrice + totalPrice * state.products.tax + state.products.shipping;
+//   return total;
+// };

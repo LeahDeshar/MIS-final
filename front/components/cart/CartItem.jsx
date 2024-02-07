@@ -1,18 +1,28 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { calculateNetTotal, setQuantity } from "../../redux/productReducer";
 const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
+
   const [qty, setQty] = useState(1);
+
   const handleAddQty = () => {
     if (qty === 10) return alert("You can't add more than 10 quantity");
     setQty((prev) => prev + 1);
-    // onUpdateQuantity(item._id, qty + 1);
+    dispatch(
+      setQuantity({ orderQty: qty + 1, _id: item._id, price: item.price })
+    );
+    dispatch(calculateNetTotal());
   };
 
   const handleRemoveQty = () => {
     if (qty <= 1) return;
     setQty((prev) => prev - 1);
-    // onUpdateQuantity(item._id, qty - 1);
+    dispatch(
+      setQuantity({ orderQty: qty - 1, _id: item._id, price: item.price })
+    );
+    dispatch(calculateNetTotal());
   };
 
   return (

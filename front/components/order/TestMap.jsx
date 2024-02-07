@@ -2,12 +2,16 @@ import { Keyboard, TextInput, View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import MapView, { MapMarker, Polyline } from "react-native-maps";
 import React, { useCallback, useMemo, useRef } from "react";
-import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import useDebounce from "../useDebounce";
 import LocationPickerModal from "../LocationPickerModal";
 import ActivityIndicator from "../ActivityIndicator";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Location from "expo-location";
+import { useDispatch } from "react-redux";
+import { setGlobalLocation } from "../../redux/productReducer";
+
 const places = [
   {
     id: 1,
@@ -89,22 +93,15 @@ const places = [
 ];
 
 export default function TestMap() {
+  const [currLocation, setcurrLocation] = useState(null);
   const mapRef = useRef(null);
   const bottomSheetRef = useRef(null);
-  const bottomSheetTextInputRef = useRef(null);
   const [dragValue, setDragValue] = useState(0);
 
-  const [pickupLocationModelVisible, setPickupLocationModelVisible] =
-    useState(false);
-  const [destinationLocationModelVisible, setDestinationLocationModelVisible] =
-    useState(false);
   const [mapTouched, setMapTouched] = useState(false);
-  const [pickupLocation, setPickupLocation] = useState(
-    places.find((place) => place.id === 11) || null
-  );
-  const [pickupLocationInput, setPickupLocationInput] = useState("");
+  const [pickupLocation, setPickupLocation] = useState(null);
+  const [pickupLocationInput, setPickupLocationInput] = useState({});
   const [destinationLocation, setDestinationLocation] = useState(null);
-  const [destinationLocationInput, setDestinationLocationInput] = useState("");
   const [artificalLoading, setArtificalLoading] = useState(false);
 
   useDebounce(
@@ -120,17 +117,18 @@ export default function TestMap() {
       Keyboard.dismiss();
       bottomSheetRef.current?.snapToPosition(0);
     } else {
-      timeout = setTimeout(() => {
+      let timeout = setTimeout(() => {
         bottomSheetRef.current?.snapToIndex(0);
       }, 0);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
-    return () => {
-      clearTimeout(timeout);
-    };
   }, [mapTouched]);
 
   useEffect(() => {
     if (pickupLocation) {
+      console.log("pick");
       mapRef.current?.fitToCoordinates(
         [
           {
@@ -147,29 +145,38 @@ export default function TestMap() {
           },
         }
       );
-    } else if (pickupLocation) {
+    } else if (currLocation) {
       mapRef.current?.animateCamera({
         center: {
-          latitude: pickupLocation.latitude,
-          longitude: pickupLocation.longitude,
+          latitude: currLocation?.coords.latitude,
+          longitude: currLocation?.coords.longitude,
         },
-        zoom: 15,
+        zoom: 5,
       });
     }
-  }, [pickupLocation]);
+  }, [pickupLocation, currLocation]);
 
-  // useEffect(() => {
-  //   Geolocation.getCurrentPosition(
-  //     (position) => {
-  //       const { latitude, longitude } = position.coords;
-  //       setPickupLocation({ latitude, longitude });
-  //     },
-  //     (error) => console.log(error),
-  //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-  //   );
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setcurrLocation(location);
+
+      setPickupLocation({
+        id: pickupLocation?.id || 1,
+        latitude: location.coords.latitude || pickupLocation.latitude,
+        longitude: location.coords.longitude || pickupLocation.longitude,
+      });
+    })();
+  }, []);
 
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchProduct, setSearchProduct] = useState("");
   const [location, setLocation] = useState(null);
@@ -177,14 +184,68 @@ export default function TestMap() {
   const handleLocationSelect = (selectedLocation) => {
     setLocation(selectedLocation);
     setModalVisible(false);
+    let searchLoc = `${selectedLocation.title}, ${selectedLocation.city}`;
+
+    const selectedPlace = places?.find(
+      (place) =>
+        place.title.toLowerCase() === selectedLocation.title.toLowerCase()
+    );
+
+    if (selectedPlace) {
+      const { latitude, longitude } = selectedPlace;
+      setPickupLocation({
+        id: selectedPlace,
+        latitude: latitude,
+        longitude: longitude,
+      });
+    }
+
+    setSearch(searchLoc);
+    console.log("searchLoc", searchLoc);
+    dispatch(setGlobalLocation(selectedLocation.title));
   };
+
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    try {
+      let address = await Location.reverseGeocodeAsync(
+        { latitude, longitude },
+        { accuracy: Location.Accuracy.High }
+      );
+      if (address && address.length > 0) {
+        return address[0];
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching address:", error);
+      return null;
+    }
+  };
+
+  const fetchAddress = async (latitude, longitude) => {
+    try {
+      const address = await getAddressFromCoordinates(latitude, longitude);
+      if (address) {
+        setPickupLocation(address);
+        setPickupLocationInput(address);
+      } else {
+        console.log("Address not found");
+      }
+    } catch (error) {
+      console.error("Error fetching address:", error);
+      if (error.message === "Rate limit exceeded - too many requests") {
+        return;
+      }
+    }
+  };
+  fetchAddress(currLocation?.coords.latitude, currLocation?.coords.longitude);
+
   return (
     <View className="flex-1">
       <MapView
         initialCamera={{
           center: {
-            latitude: 27.6933113,
-            longitude: 85.3211291,
+            latitude: currLocation?.coords.latitude,
+            longitude: currLocation?.coords.longitude,
           },
           zoom: 15,
           heading: 0,
@@ -202,20 +263,17 @@ export default function TestMap() {
         }}
         provider="google"
         showsCompass
-        showsUserLocation
         showsMyLocationButton
       >
-        {pickupLocation && (
-          <MapMarker
-            key={pickupLocation.id}
-            coordinate={{
-              latitude: pickupLocation.latitude,
-              longitude: pickupLocation.longitude,
-            }}
-            pinColor={"red"}
-            draggable
-          />
-        )}
+        <MapMarker
+          key={pickupLocation?.id}
+          coordinate={{
+            latitude: pickupLocation?.latitude || 0,
+            longitude: pickupLocation?.longitude || 0,
+          }}
+          pinColor={"red"}
+          draggable
+        />
       </MapView>
       <BottomSheet
         keyboardBlurBehavior="restore"
@@ -261,8 +319,8 @@ export default function TestMap() {
         setModalVisible={setModalVisible}
         textInput={searchProduct}
         setTextInput={setSearchProduct}
-        location={location}
-        setLocation={handleLocationSelect}
+        selectedData={location}
+        setSelectedData={handleLocationSelect}
         isLocationPicker
       />
     </View>

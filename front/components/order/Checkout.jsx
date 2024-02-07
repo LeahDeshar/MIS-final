@@ -5,8 +5,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
-// import { CartData } from "../../data/CartData";
+import React, { useEffect, useState } from "react";
 import CartItem from "../cart/CartItem";
 import PriceTable from "../cart/PriceTable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -16,22 +15,33 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import AppCheckBox from "../AppCheckBox";
 import Footer from "../layout/Footer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { calculateNetTotal, setShipping } from "../../redux/productReducer";
 const Checkout = () => {
   const navigation = useNavigation();
-  const paymentMethods = [
-    { label: "PayPal", value: "paypal" },
-    { label: "Cash on Delivery", value: "cod" },
-  ];
-  const shippingMethods = [
-    { label: "Inside Kathmandu", value: "in" },
-    { label: "Outside Kathmandu", value: "out" },
-  ];
-
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
-    paymentMethods[0]
-  );
+  const BottomShipRef = useRef(null);
   const BottomRef = useRef(null);
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedpayOption, setSelectedpayOption] = useState(null);
+
+  const dispatch = useDispatch();
+  const handleCheckBoxChange = (option) => {
+    setSelectedOption(option);
+    dispatch(setShipping(option));
+    dispatch(calculateNetTotal());
+
+    BottomShipRef.current?.close();
+  };
+  const handlePayMethodChange = (option) => {
+    setSelectedpayOption(option);
+    // dispatch(setShipping(option));
+    // dispatch(calculateNetTotal());
+
+    BottomRef.current?.close();
+  };
+  const shippingmethodPrice = useSelector((state) => state.products.shipping);
+
   const handlePresentModalPress = () => {
     BottomRef.current.present();
   };
@@ -39,7 +49,6 @@ const Checkout = () => {
     BottomRef.current.close();
   };
 
-  const BottomShipRef = useRef(null);
   const handleShipPresentModalPress = () => {
     BottomShipRef.current.present();
   };
@@ -48,6 +57,18 @@ const Checkout = () => {
   };
 
   const cartData = useSelector((state) => state.products.cart);
+
+  const totalPrice = cartData?.reduce(
+    (acc, cur) => acc + Number(cur.totalPrice),
+    0
+  );
+
+  const netTotal = useSelector((state) => state.products.netTotal);
+  useEffect(() => {
+    dispatch(calculateNetTotal());
+  }, []);
+
+  const location = useSelector((state) => state.products.location);
   return (
     <View style={{ paddingHorizontal: 15, flex: 1 }}>
       <BottomSheetModalProvider>
@@ -57,14 +78,26 @@ const Checkout = () => {
             onPress={() => navigation.navigate("Location")}
           >
             <Text>Location</Text>
-            <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ paddingRight: 10, color: "grey" }}>
+                {location}
+              </Text>
+              <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={handlePresentModalPress}
           >
             <Text>Payment Method</Text>
-            <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ color: "grey", paddingRight: 10 }}>
+                {selectedpayOption === null
+                  ? "Select"
+                  : selectedpayOption?.toUpperCase()}
+              </Text>
+              <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -72,7 +105,14 @@ const Checkout = () => {
             onPress={handleShipPresentModalPress}
           >
             <Text>Shipping Method</Text>
-            <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ color: "grey", paddingRight: 10 }}>
+                {selectedOption === null
+                  ? "Select"
+                  : selectedOption?.toUpperCase()}
+              </Text>
+              <FontAwesome name="angle-right" color={"#b7b7b7"} size={25} />
+            </View>
           </TouchableOpacity>
 
           {cartData && (
@@ -84,13 +124,15 @@ const Checkout = () => {
               </ScrollView>
 
               <View>
-                <PriceTable price={999} title={"Total Price"} />
+                <PriceTable price={totalPrice} title={"Total Price"} />
                 <PriceTable price={0} title={"Discount"} />
-
-                <PriceTable price={999} title={"Tax"} />
-                <PriceTable price={999} title={"Shipping charges"} />
+                <PriceTable price={"4%"} title={"Tax"} />
+                <PriceTable
+                  price={shippingmethodPrice}
+                  title={"Shipping charges"}
+                />
                 <View style={styles.grandTotal}>
-                  <PriceTable title={"Net Total"} price={2000} />
+                  <PriceTable title={"Net Total"} price={netTotal} />
                 </View>
                 <TouchableOpacity
                   style={styles.btnCheckout}
@@ -107,13 +149,29 @@ const Checkout = () => {
           )}
 
           <BottomSheetModal ref={BottomRef} index={0} snapPoints={[250]}>
-            <AppCheckBox label={"PayPal"} value={"paypal"} />
-            <AppCheckBox label={"Cash On Delivery"} value={"cod"} />
+            <AppCheckBox
+              label={"PayPal"}
+              value={selectedpayOption === "paypal"}
+              onValueChange={() => handlePayMethodChange("paypal")}
+            />
+            <AppCheckBox
+              label={"Cash On Delivery"}
+              value={selectedpayOption === "cod"}
+              onValueChange={() => handlePayMethodChange("cod")}
+            />
           </BottomSheetModal>
 
           <BottomSheetModal ref={BottomShipRef} index={0} snapPoints={[250]}>
-            <AppCheckBox label={"Inside Kathmandu"} value={"in"} />
-            <AppCheckBox label={"Outside Kathmandu"} value={"out"} />
+            <AppCheckBox
+              label={"Inside Kathmandu"}
+              value={selectedOption === "in"}
+              onValueChange={() => handleCheckBoxChange("in")}
+            />
+            <AppCheckBox
+              label={"Outside Kathmandu"}
+              value={selectedOption === "out"}
+              onValueChange={() => handleCheckBoxChange("out")}
+            />
           </BottomSheetModal>
         </View>
       </BottomSheetModalProvider>
