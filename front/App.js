@@ -42,6 +42,16 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import Payment from "./components/cart/Payment";
+import Finalpay from "./components/cart/Finalpay";
+import { registerRootComponent } from "expo";
+import { AppRegistry } from "react-native";
+
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([
+  "Sending `onAnimatedValueUpdate` with no listeners registered.",
+]);
+
 const Stack = createStackNavigator();
 const App = () => {
   useEffect(() => {
@@ -91,6 +101,8 @@ const App = () => {
             <Stack.Screen name="Cart" component={Cart} />
             <Stack.Screen name="Notification" component={Notifications} />
             <Stack.Screen name="Account" component={AccountUser} />
+            <Stack.Screen name="Payment" component={Payment} />
+            <Stack.Screen name="finalpay" component={Finalpay} />
 
             <Stack.Screen
               name="ForumSet"
@@ -167,3 +179,5 @@ const App = () => {
 };
 
 export default App;
+AppRegistry.registerComponent("App", () => App);
+registerRootComponent(App);

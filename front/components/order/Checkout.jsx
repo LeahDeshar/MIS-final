@@ -24,7 +24,7 @@ const Checkout = () => {
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedpayOption, setSelectedpayOption] = useState(null);
-
+  console.log(selectedpayOption);
   const dispatch = useDispatch();
   const handleCheckBoxChange = (option) => {
     setSelectedOption(option);
@@ -69,6 +69,14 @@ const Checkout = () => {
   }, []);
 
   const location = useSelector((state) => state.products.location);
+
+  const handleCheckout = () => {
+    if (selectedpayOption === "paypal") {
+      navigation.navigate("Payment");
+    } else if (selectedpayOption === "cod") {
+      navigation.navigate("finalpay");
+    }
+  };
   return (
     <View style={{ paddingHorizontal: 15, flex: 1 }}>
       <BottomSheetModalProvider>
@@ -136,9 +144,13 @@ const Checkout = () => {
                 </View>
                 <TouchableOpacity
                   style={styles.btnCheckout}
-                  onPress={() => navigation.navigate("Confirmation")}
+                  onPress={handleCheckout}
                 >
-                  <Text style={styles.btnCheckoutText}>CHECKOUT</Text>
+                  <Text style={styles.btnCheckoutText}>
+                    {selectedpayOption === "paypal"
+                      ? "PROCEED TO PAYMENT"
+                      : "CHECKOUT"}
+                  </Text>
                 </TouchableOpacity>
               </View>
 

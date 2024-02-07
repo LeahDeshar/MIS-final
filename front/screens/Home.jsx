@@ -14,7 +14,10 @@ import Tail from "../components/recommend/Tail";
 import Footer from "../components/layout/Footer";
 import DashBoard from "../components/seller/DashBoard";
 import { fetchDataFromStorage } from "../components/auth/localstorage";
-
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([
+  "Sending `onAnimatedValueUpdate` with no listeners registered.",
+]);
 const Home = () => {
   // const user = 'seller'
   const user = "buyer";
