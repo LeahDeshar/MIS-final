@@ -16,7 +16,7 @@ import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 import Stripe from "stripe";
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "http://192.168.1.3" }));
 app.use(helmet());
 app.use(ExpressMongoSanitize());
 dotenv.config();

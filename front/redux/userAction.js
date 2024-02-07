@@ -61,21 +61,61 @@ export const register = (formData) => async (dispatch) => {
 };
 
 // GET USER DATTA ACTION\
+// export const getUserData = () => async (dispatch) => {
+//   try {
+//     console.log("get profile");
+
+//     dispatch({
+//       type: "getUserDataRequest",
+//     });
+//     console.log("get profile");
+
+//     // hitting node login api request
+//     const { data } = await axios.get(`${server}/user/profile`);
+//     console.log("get profile");
+//     dispatch({
+//       type: "getUserDataSucess",
+//       payload: data?.user,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: "getUserDataFail",
+//       payload: error?.response?.data?.message || "An error occured",
+//     });
+//   }
+// };
+
 export const getUserData = () => async (dispatch) => {
   try {
+    console.log("get profile");
+
     dispatch({
       type: "getUserDataRequest",
     });
+    console.log("get profile");
+
+    // Get the token from wherever you have stored it
+    const token = await AsyncStorage.getItem("@auth");
+
     // hitting node login api request
-    const { data } = await axios.post(`${server}/user/profile`);
+    const { data } = await axios.get(`${server}/user/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("get profile");
     dispatch({
       type: "getUserDataSucess",
       payload: data?.user,
     });
+    await AsyncStorage.setItem("@profile", JSON.stringify(data?.user));
   } catch (error) {
+    console.error("Error fetching user data:", error);
+
     dispatch({
       type: "getUserDataFail",
-      payload: error.response.data.message,
+      payload: error.message,
     });
   }
 };
