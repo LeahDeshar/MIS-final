@@ -158,13 +158,11 @@ export const logoutController = (req, res) => {
 export const profileUpdateController = async (req, res) => {
   try {
     const user = await Users.findById(req.user._id);
-    const { name, email, address, city, country, phone } = req.body;
+    const { name, email, address, phone } = req.body;
     // update validation
     if (name) user.name = name;
     if (email) user.email = email;
     if (address) user.address = address;
-    if (city) user.city = city;
-    if (country) user.country = country;
     if (phone) user.phone = phone;
     await user.save();
     return res.status(200).json({
@@ -219,21 +217,59 @@ export const passUpdateController = async (req, res) => {
 };
 
 // update user profile image
+// export const profilePicUpdateController = async (req, res) => {
+//   try {
+//     const user = await Users.findById(req.user._id);
+//     // get the photo from client
+//     const file = getDataUri(req.file);
+//     // delete prev photo
+
+//     await cloudinary.v2.uploader.destroy(user.profilePic.public_id);
+//     // then update
+//     const cdb = await cloudinary.v2.uploader.upload(file.content);
+//     user.profilePic = {
+//       public_id: cdb.public_id,
+//       url: cdb.secure_url,
+//     };
+//     // save
+//     await user.save();
+
+//     return res.status(200).json({
+//       msg: "Profile pic updated successfully",
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({
+//       msg: "Internal Error (profile pic update)",
+//       success: false,
+//       error,
+//     });
+//   }
+// };
 export const profilePicUpdateController = async (req, res) => {
   try {
     const user = await Users.findById(req.user._id);
     // get the photo from client
     const file = getDataUri(req.file);
-    // delete prev photo
 
-    await cloudinary.v2.uploader.destroy(user.profilePic.public_id);
-    // then update
+    // Check if user has a profile picture already
+    if (user.profilePic && user.profilePic.public_id) {
+      // Delete previous profile picture from Cloudinary
+      await cloudinary.v2.uploader.destroy(user.profilePic.public_id);
+    }
+
+    // Upload new profile picture to Cloudinary
     const cdb = await cloudinary.v2.uploader.upload(file.content);
+
+    // Update user's profile picture
     user.profilePic = {
       public_id: cdb.public_id,
       url: cdb.secure_url,
     };
-    // save
+
+    // Save user
     await user.save();
 
     return res.status(200).json({

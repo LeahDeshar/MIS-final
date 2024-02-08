@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { getUserData } from "../../redux/userAction";
 import { fetchDataFromStorage } from "../../components/auth/localstorage";
+import ImageUpload from "../../components/ImageUpload";
+import DefaultProfileImage from "../../components/DefaultProfileImage";
 
 const Notifications = () => {
   const dispatch = useDispatch();
@@ -28,6 +30,8 @@ const Notifications = () => {
         title="register"
         onPress={() => navigation.navigate("register")}
       />
+      <DefaultProfileImage name={"Test User"} />
+      <ImageUpload />
       <View style={styles.footerContainer}>
         <Footer />
       </View>

@@ -1,39 +1,106 @@
 import { View, Text, Image, Pressable, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import Layout from "../../components/layout/Layout";
 import { UserData } from "../../data/UserData";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native";
 import InputBox from "../../components/form/InputBox";
 import Footer from "../../components/layout/Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserData } from "../../redux/userAction";
+import {
+  UpdateUserData,
+  UpdateUserProfileImage,
+  getUserData,
+} from "../../redux/userAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { fetchDataFromStorage } from "../../components/auth/localstorage";
+import * as ImagePicker from "expo-image-picker";
+import DefaultProfileImage from "../../components/DefaultProfileImage";
 const Profile = ({ navigation }) => {
-  const [email, setEmail] = useState(UserData.email);
-  const [profilePic, setProfilePic] = useState(UserData.profilePic);
-  const [password, setPassword] = useState(UserData?.password);
-  const [name, setName] = useState(UserData?.name);
-  const [address, setAddress] = useState(UserData?.address);
-  const [city, setCity] = useState(UserData?.city);
-  const [contact, setContact] = useState(UserData?.contact);
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+
+  const [contact, setContact] = useState("");
 
   const handleUpdate = () => {
-    if (!email || !password || !name || !address || !city || !contact) {
+    if (!email || !name || !address || !contact) {
       return alert("Please enter your information");
     }
+    dispatch(UpdateUserData({ email, name, address, phone: contact }));
+    dispatch(getUserData());
+    fetchDataFromStorage();
     alert("Profile Updated Successfully");
-    navigation.navigate("account");
+    navigation.navigate("Account");
+  };
+
+  useEffect(() => {
+    dispatch(getUserData());
+    fetchDataFromStorage();
+    const fetchData = async () => {
+      const storedProfileString = await AsyncStorage.getItem("@profile");
+      const profile = JSON.parse(storedProfileString);
+
+      if (profile) {
+        setEmail(profile?.email);
+        setName(profile?.name);
+        setProfilePic(profile?.profilePic.url);
+        setAddress(profile?.address);
+        setContact(profile?.phone);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  console.log(selectedImage);
+  const handleSelectImage = async () => {
+    try {
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        alert("Permission to access camera roll is required!");
+        return;
+      }
+
+      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!pickerResult.canceled && pickerResult.assets.length > 0) {
+        const firstAsset = pickerResult.assets[0];
+        setSelectedImage(firstAsset.uri);
+
+        let formData = new FormData();
+        formData.append("file", {
+          uri: firstAsset.uri,
+          type: "image/png",
+          name: "profilePic.png",
+        });
+
+        dispatch(UpdateUserProfileImage(formData));
+      }
+    } catch (error) {
+      console.log("Error picking an image:", error);
+    }
   };
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={profilePic} />
-          <Pressable onPress={() => alert("Profile dialog box")}>
-            <Text style={{ color: "red" }}>Update Your Profile Picture</Text>
-          </Pressable>
+          <TouchableOpacity style={styles.button} onPress={handleSelectImage}>
+            {profilePic && selectedImage === null ? (
+              <Image source={{ uri: profilePic }} style={styles.image} />
+            ) : selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={styles.image} />
+            ) : (
+              <DefaultProfileImage name={"Test User"} />
+            )}
+          </TouchableOpacity>
         </View>
         <InputBox
           value={name}
@@ -48,23 +115,10 @@ const Profile = ({ navigation }) => {
           autoComplete={"email"}
         />
         <InputBox
-          value={password}
-          setValue={setPassword}
-          placeholder={"Enter Your Password"}
-          autoComplete={"password"}
-          secureTextEntry={true}
-        />
-        <InputBox
           value={address}
           setValue={setAddress}
           placeholder={"Enter Your Address"}
           autoComplete={"address-line1"}
-        />
-        <InputBox
-          value={city}
-          setValue={setCity}
-          placeholder={"Enter Your City"}
-          autoComplete={"country"}
         />
         <InputBox
           value={contact}
@@ -94,9 +148,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
+    width: 100,
     height: 100,
-    width: "100%",
-    resizeMode: "contain",
+    resizeMode: "cover",
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   btnUpdate: {
     backgroundColor: "#000",

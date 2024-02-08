@@ -1,4 +1,12 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -21,7 +29,6 @@ const AccountUser = ({ navigation }) => {
     fetchDataFromStorage();
     const fetchData = async () => {
       const storedProfileString = await AsyncStorage.getItem("@profile");
-      // storedProfile = JSON.parse(storedProfileString);
       setProfile(JSON.parse(storedProfileString));
     };
 
@@ -30,29 +37,31 @@ const AccountUser = ({ navigation }) => {
 
   return (
     <View style={styles.outerContainer}>
+      <View style={styles.imageContainer}>
+        <ImageBackground
+          source={{ uri: profile?.profilePic.url }}
+          style={styles.image}
+        />
+        <View style={styles.overlay}></View>
+      </View>
       <View style={styles.container}>
-        <View>
-          <Image source={UserData.profilePic} style={styles.image} />
-        </View>
-
         <View style={styles.detail}>
-          <Text style={styles.name}>{profile.name}</Text>
-          <Text>{profile.email} </Text>
-          <Text>{profile.phone} </Text>
+          <Text style={styles.name}>@{profile?.name}</Text>
+          <Text style={{ color: "#c1c1c1" }}> {profile?.email} </Text>
+          <Text style={{ color: "#c1c1c1" }}>+977 {profile?.phone} </Text>
         </View>
         <View style={styles.couponContainer}>
           <View>
-            <Text style={{ textAlign: "center" }}>0</Text>
-            <Text>Coupons</Text>
+            <Text style={{ color: "#dadada" }}>0</Text>
+            <Text style={{ color: "#dadada" }}>Coupons</Text>
           </View>
-          <View>
-            <Text style={{ textAlign: "center" }}>0.0</Text>
-            <Text>Wallet</Text>
+          <View style={{ paddingTop: 10 }}>
+            <Text style={{ color: "#dadada" }}>0.0</Text>
+            <Text style={{ color: "#dadada" }}>Wallet</Text>
           </View>
         </View>
       </View>
-      <View style={styles.btnContainer}>
-        {/* <Text style={styles.heading}>Account Setting</Text> */}
+      <ScrollView style={styles.btnContainer}>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("Profile")}
@@ -135,10 +144,7 @@ const AccountUser = ({ navigation }) => {
           <AntDesign name="logout" style={styles.btnText} />
           <Text style={styles.btnText}>Logout </Text>
         </TouchableOpacity>
-      </View>
-      {/* <View> 
-                <Footer/>
-            </View> */}
+      </ScrollView>
     </View>
   );
 };
@@ -146,41 +152,49 @@ const AccountUser = ({ navigation }) => {
 export default AccountUser;
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
-    // marginHorizontal: 20,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    position: "absolute",
+    top: 40,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 190,
+  },
+  imageContainer: {
+    flex: 1,
   },
   image: {
-    height: 75,
-    width: 75,
-    borderRadius: 12,
+    flex: 1,
+    height: 190,
     resizeMode: "cover",
   },
 
   couponContainer: {
-    // flexDirection: 'row',
-    justifyContent: "space-between",
+    marginLeft: 150,
   },
   outerContainer: {
     backgroundColor: "#fff",
     flex: 1,
-    paddingHorizontal: 20,
   },
   name: {
     fontSize: 33,
+    marginBottom: 5,
+    color: "#f7f7f7",
+    fontStyle: "italic",
   },
   detail: {
     marginLeft: 20,
   },
   btnContainer: {
-    // padding: 10,
     backgroundColor: "#fff",
-    // margin: 10,
-    // marginVertical: 20,
-    // elevation: 5,
     borderRadius: 10,
-    // marginTop: 150
+    marginTop: 80,
+    paddingLeft: 10,
   },
   heading: {
     fontSize: 20,

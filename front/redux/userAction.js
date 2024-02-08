@@ -119,6 +119,82 @@ export const getUserData = () => async (dispatch) => {
     });
   }
 };
+
+export const UpdateUserData =
+  ({ email, name, address, phone }) =>
+  async (dispatch) => {
+    try {
+      console.log("update profile", { email, name, address, phone });
+
+      dispatch({
+        type: "UpdateUserDataRequest",
+      });
+      console.log("update profile");
+
+      // Get the token from wherever you have stored it
+      const token = await AsyncStorage.getItem("@auth");
+
+      // hitting node login api request
+      const { data } = await axios.put(
+        `${server}/user/profileUpdate`,
+        { email, name, address, phone },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("update profile");
+      dispatch({
+        type: "UpdateUserDataSucess",
+        payload: data?.user,
+      });
+      await AsyncStorage.setItem("@profile", JSON.stringify(data?.user));
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+
+      dispatch({
+        type: "UpdateUserDataFail",
+        payload: error.message,
+      });
+    }
+  };
+
+export const UpdateUserProfileImage = (formData) => async (dispatch) => {
+  try {
+    console.log("update profile image", { formData });
+
+    dispatch({
+      type: "updateProfilePictureRequest",
+    });
+    console.log("update profile");
+
+    // Get the token from wherever you have stored it
+    const token = await AsyncStorage.getItem("@auth");
+
+    // hitting node login api request
+    const { data } = await axios.put(`${server}/user/picUpdate`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("update profile");
+    dispatch({
+      type: "updateProfilePictureSuccess",
+      payload: data?.user,
+    });
+    await AsyncStorage.setItem("@profile", JSON.stringify(data?.user));
+  } catch (error) {
+    console.error("Error fetching user data in profile update image:", error);
+
+    dispatch({
+      type: "updateProfilePictureFail",
+      payload: error.message,
+    });
+  }
+};
 // LOGOUT ACTION
 export const logout = () => async (dispatch) => {
   try {
