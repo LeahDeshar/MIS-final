@@ -10,6 +10,7 @@ import {
   removeProductFromCart,
 } from "../../redux/productReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FastImage from "react-native-fast-image";
 
 const FeatureCard = ({ product, cardWidth, imgWidth }) => {
   const navigation = useNavigation();
@@ -37,7 +38,13 @@ const FeatureCard = ({ product, cardWidth, imgWidth }) => {
       onPress={() => navigation.navigate("Details", { _id: _id })}
     >
       <View>
-        <Image source={image} style={[styles.cardImage, { width: imgWidth }]} />
+        {/* <Image source={image} style={[styles.cardImage, { width: imgWidth }]} /> */}
+        <FastImage
+          source={image}
+          // source={{ uri: product.image }} // Use FastImage with uri
+          style={[styles.cardImage, { width: imgWidth }]}
+          resizeMode={FastImage.resizeMode.cover} // Adjust resizeMode if needed
+        />
         <View
           style={{
             position: "absolute",
