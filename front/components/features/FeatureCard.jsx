@@ -10,11 +10,16 @@ import {
   removeProductFromCart,
 } from "../../redux/productReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FastImage from "react-native-fast-image";
+import AppImage from "../AppImage";
 
-const FeatureCard = ({ product, cardWidth, imgWidth }) => {
+const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
   const navigation = useNavigation();
   const [isBookmarked, setBookmark] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    Image.prefetch(product.image);
+  }, [product.image]);
 
   const handleBookmark = () => {
     setBookmark(!isBookmarked);
@@ -29,21 +34,22 @@ const FeatureCard = ({ product, cardWidth, imgWidth }) => {
       dispatch(toggleBookmark({ product }));
     }
   };
-  const { _id, name, description, image, price, rating } = product;
 
-  const dispatch = useDispatch();
+  const { _id, name, description, image, price, rating } = product;
   return (
     <TouchableOpacity
       style={[styles.card, { width: cardWidth }]}
       onPress={() => navigation.navigate("Details", { _id: _id })}
     >
       <View>
-        {/* <Image source={image} style={[styles.cardImage, { width: imgWidth }]} /> */}
-        <FastImage
-          source={image}
-          // source={{ uri: product.image }} // Use FastImage with uri
+        <AppImage
+          source={{
+            uri: "https://rodaleinstitute.org/wp-content/uploads/FSTorganicBeans2010.jpg",
+          }}
+          alt="Example Image"
           style={[styles.cardImage, { width: imgWidth }]}
-          resizeMode={FastImage.resizeMode.cover} // Adjust resizeMode if needed
+          // contain={true}
+          noCache={false}
         />
         <View
           style={{
@@ -90,8 +96,7 @@ const FeatureCard = ({ product, cardWidth, imgWidth }) => {
       </View>
     </TouchableOpacity>
   );
-};
-
+});
 export default FeatureCard;
 
 const styles = StyleSheet.create({
