@@ -34,7 +34,6 @@ const AllNewProducts = () => {
     console.log(id);
     navigation.navigate("Product Details", { _id: id });
   };
-  // console.log(allproducts?.images[0]?.url);
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topCategory}>
@@ -54,12 +53,10 @@ const AllNewProducts = () => {
                       source={{ uri: item.images[0].url }}
                       alt="Example Image"
                       style={styles.imgStyle}
-                      // contain={true}
                       noCache={false}
                     />
                   </>
                 )}
-                {/* <Image source={item.image} style={styles.imgStyle} /> */}
                 <View style={styles.overlay} />
                 <Text style={styles.catTitle}>{item.name}</Text>
               </TouchableOpacity>
@@ -80,7 +77,6 @@ export default AllNewProducts;
 const styles = StyleSheet.create({
   outerContainer: {
     backgroundColor: "white",
-    // paddingBottom: 150
   },
   container: {
     width: "100%",

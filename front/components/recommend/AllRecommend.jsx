@@ -6,16 +6,30 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FeaturedProducts from "../../data/FeaturedData";
 import newProducts from "../../data/NewProductsData";
 import Categories from "../categories/Categories";
 import Footer from "../layout/Footer";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { getAllProducts } from "../../redux/productAction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppImage from "../AppImage";
 
 const AllRecommend = () => {
   const navigation = useNavigation();
-  const allProducts = [...FeaturedProducts, ...newProducts];
+  const dispatch = useDispatch();
+  const [allproducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(getAllProducts());
+      const storedProductsString = await AsyncStorage.getItem("@allproducts");
+      const storedProducts = JSON.parse(storedProductsString);
+      setAllProducts(storedProducts);
+    };
+    fetchData();
+  }, []);
   return (
     <View style={styles.outerContainer}>
       <View>
@@ -23,7 +37,7 @@ const AllRecommend = () => {
       </View>
       <View style={styles.container}>
         <ScrollView>
-          {allProducts?.map((item) => (
+          {allproducts?.map((item) => (
             <View key={item._id}>
               <TouchableOpacity
                 style={styles.categoryContainer}
@@ -32,7 +46,18 @@ const AllRecommend = () => {
                 }
               >
                 <View style={styles.card}>
-                  <Image source={item.image} style={styles.cardImage} />
+                  {/* <Image source={item.image} style={styles.cardImage} /> */}
+                  {item && item.images && item.images.length > 0 && (
+                    <>
+                      <AppImage
+                        source={{ uri: item.images[0].url }}
+                        alt="Example Image"
+                        style={styles.cardImage}
+                        // contain={true}
+                        noCache={false}
+                      />
+                    </>
+                  )}
                   <View style={styles.cardDetail}>
                     <Text style={styles.cardTitle}>{item.name}</Text>
                     <Text>{item.description.split(".")[0]}</Text>
@@ -103,8 +128,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "white",
     shadowColor: "black",
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.09,
     shadowRadius: 4,
   },
   footer: {

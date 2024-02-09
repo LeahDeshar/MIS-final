@@ -32,12 +32,10 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
     }
   };
 
-  const { _id, name, description, images, price, rating } = product;
-  console.log("image test", images);
   return (
     <TouchableOpacity
       style={[styles.card, { width: cardWidth }]}
-      onPress={() => navigation.navigate("Details", { _id: _id })}
+      onPress={() => navigation.navigate("Details", { _id: product?._id })}
     >
       <View>
         {product && product.images && product.images.length > 0 && (
@@ -92,7 +90,9 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
         </TouchableOpacity>
         <View style={styles.detailText}>
           <Text style={styles.cardTitle}>{product?.name}</Text>
-          <Text style={{ fontSize: 17, marginTop: 5 }}>Rs.{price}</Text>
+          <Text style={{ fontSize: 17, marginTop: 5 }}>
+            Rs.{product?.price}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

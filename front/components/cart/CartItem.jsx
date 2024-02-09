@@ -2,9 +2,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { calculateNetTotal, setQuantity } from "../../redux/productReducer";
+import AppImage from "../AppImage";
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
-
   const [qty, setQty] = useState(1);
 
   const handleAddQty = () => {
@@ -25,9 +25,19 @@ const CartItem = ({ item }) => {
     dispatch(calculateNetTotal());
   };
 
+  console.log(item);
   return (
     <View style={styles.container}>
-      <Image source={item?.image} style={styles.image} />
+      <>
+        <AppImage
+          source={{ uri: item?.images[0].url }}
+          alt="Example Image"
+          style={styles.image}
+          // contain={true}
+          noCache={false}
+        />
+      </>
+
       <View>
         <Text style={styles.name}>{item?.name}</Text>
         <Text style={styles.name}>Price: {item?.price}$</Text>

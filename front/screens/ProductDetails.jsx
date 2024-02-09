@@ -22,6 +22,8 @@ import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet/src";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet/src/components/bottomSheet";
+import { useDispatch } from "react-redux";
+import { getOneProducts } from "../redux/productAction";
 
 const ProductDetails = ({ route }) => {
   const [proDetails, setProdetails] = useState({});
@@ -34,6 +36,19 @@ const ProductDetails = ({ route }) => {
     });
     setProdetails(getProduct);
   }, [params?._id]);
+
+  const dispatch = useDispatch();
+  const [allproducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(getOneProducts({ id: params?._id }));
+      const storedProductsString = await AsyncStorage.getItem("@oneproduct");
+      const storedProducts = JSON.parse(storedProductsString);
+      setAllProducts(storedProducts);
+    };
+    fetchData();
+  }, []);
+  console.log(allproducts, "one products");
   const handleAddQty = () => {
     if (qty === proDetails?.quantity)
       return alert(`You can't add more than ${proDetails?.quantity} quantity`);

@@ -36,7 +36,6 @@ import cloudinary from "cloudinary";
 // }
 export const getAllProductController = async (req, res) => {
   try {
-    // Fetch all products from the database
     const products = await Products.find()
       .populate("farmer")
       .populate("category");
@@ -54,6 +53,7 @@ export const getAllProductController = async (req, res) => {
     });
   }
 };
+
 // controller to get all top products
 export async function getTopProductController(req, res) {
   try {
@@ -78,14 +78,18 @@ export async function getTopProductController(req, res) {
 }
 export async function getOneProductController(req, res) {
   try {
-    const product = await Products.findById(req.params.id);
+    console.log(req.params.id);
+    const product = await Products.findById(req.params.id)
+      .populate("farmer")
+      .populate("category")
+      .exec();
     if (!product) {
       return res.status(404).json({
         success: false,
         message: "Product not found",
       });
     }
-
+    console.log(product);
     return res.status(200).json({
       success: true,
       message: "Product fetched",

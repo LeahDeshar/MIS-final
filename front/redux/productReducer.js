@@ -133,21 +133,10 @@ export const {
 } = productSlice.actions;
 export default productSlice.reducer;
 
-// export const totalPrice = state.products.cart.reduce(
-//   (acc, cur) => acc + Number(cur.totalPrice),
-//   0
-// );
-
-// const calculateNetTotal = () => {
-//   let total =
-//     totalPrice + totalPrice * state.products.tax + state.products.shipping;
-//   return total;
-// };
-
 export const allProductReducer = createReducer(
-  { allproduct: null, error: null },
+  { allproduct: null, topproduct: null, oneproduct: null, error: null },
   (builder) => {
-    //  GET USER DATA
+    //  Get All Product Data
     builder.addCase("getAllProductRequest", (state, action) => {
       console.log("load AllProduct");
       state.loading = true;
@@ -159,6 +148,37 @@ export const allProductReducer = createReducer(
     });
     builder.addCase("getAllProductFail", (state, action) => {
       console.log("picked AllProduct");
+      state.error = action.payload;
+    });
+
+    //  Get Top 6 Product Data
+    builder.addCase("getTopProductRequest", (state, action) => {
+      console.log("load Top Product");
+      state.loading = true;
+    });
+    builder.addCase("getTopProductSuccess", (state, action) => {
+      state.loading = false;
+      // state.isAuth = true;
+      state.topproduct = action.payload;
+    });
+    builder.addCase("getTopProductFail", (state, action) => {
+      console.log("picked AllProduct");
+      // state.isAuth = false;
+      state.error = action.payload;
+    });
+
+    //  Get One Product Data
+    builder.addCase("getOneProductRequest", (state, action) => {
+      console.log("load one Product");
+      state.loading = true;
+    });
+    builder.addCase("getOneProductSuccess", (state, action) => {
+      state.loading = false;
+      // state.isAuth = true;
+      state.oneproduct = action.payload;
+    });
+    builder.addCase("getOneProductFail", (state, action) => {
+      console.log("picked One Product");
       // state.isAuth = false;
       state.error = action.payload;
     });

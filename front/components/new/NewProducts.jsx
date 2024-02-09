@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import FeatureCard from "../features/FeatureCard";
 import newProducts from "../../data/NewProductsData";
 import { useNavigation } from "@react-navigation/native";
-import { getAllProducts } from "../../redux/productAction";
+import { getAllProducts, getOneProducts } from "../../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 const NewProducts = () => {
@@ -21,6 +21,7 @@ const NewProducts = () => {
   };
   const handleMoreBtn = (id) => {
     console.log(id);
+    dispatch(getOneProducts(id));
     navigation.navigate("Product Details", { _id: id });
   };
 

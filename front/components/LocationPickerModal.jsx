@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Modal,
@@ -12,6 +12,9 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ListItemSeparator from "./ListItemSeparator";
 import newProducts from "../data/NewProductsData";
+import { useDispatch } from "react-redux";
+import { getAllProducts } from "../redux/productAction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 newProducts;
 const places = [
   {
@@ -101,19 +104,30 @@ export default function LocationPickerModal({
   setSelectedData,
   isLocationPicker = false,
 }) {
+  const dispatch = useDispatch();
+  const [allproducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(getAllProducts());
+      const storedProductsString = await AsyncStorage.getItem("@allproducts");
+      const storedProducts = JSON.parse(storedProductsString);
+      setAllProducts(storedProducts);
+    };
+    fetchData();
+  }, []);
+
   const filteredData = useMemo(() => {
     return isLocationPicker
       ? places.filter((item) =>
           item?.title?.toLowerCase().includes(textInput?.toLowerCase())
         )
-      : newProducts.filter((item) =>
+      : allproducts.filter((item) =>
           item?.name?.toLowerCase().includes(textInput?.toLowerCase())
         );
   }, [textInput, isLocationPicker]);
 
   useEffect(() => {
     if (modalVisible && selectedData) {
-      // Set the text input based on the selected data
       setTextInput(isLocationPicker ? selectedData.title : selectedData.name);
     }
   }, [modalVisible, selectedData, isLocationPicker]);

@@ -7,26 +7,22 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { ProductsData } from "../data/ProductsData";
-import Layout from "../components/layout/Layout";
-import newProducts from "../data/NewProductsData";
 import Footer from "../components/layout/Footer";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import FeaturedProducts from "../data/FeaturedData";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { getOneProducts } from "../redux/productAction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppImage from "../components/AppImage";
+import DefaultProfileImage from "../components/DefaultProfileImage";
 
 const ProductDetails = ({ route }) => {
   const navigation = useNavigation();
   const [proDetails, setProdetails] = useState({});
   const [qty, setQty] = useState(1);
-  useEffect(() => {
-    const getProduct = FeaturedProducts.find((p) => {
-      return p?._id === params?._id;
-    });
-    setProdetails(getProduct);
-  }, [params?._id]);
+
   const handleAddQty = () => {
     if (qty === proDetails?.quantity)
       return alert(`You can't add more than ${proDetails?.quantity} quantity`);
@@ -39,35 +35,41 @@ const ProductDetails = ({ route }) => {
   };
 
   const { params } = route;
-  // Function to get a random product from an array
-  const getRandomProduct = (products) => {
-    const randomIndex = Math.floor(Math.random() * products.length);
-    return products[randomIndex];
-  };
 
-  // Function to get an array of random products
-  const getRandomProducts = (products, count) => {
-    const randomProducts = [];
-    for (let i = 0; i < count; i++) {
-      const randomProduct = getRandomProduct(products);
-      randomProducts.push(randomProduct);
-    }
-    return randomProducts;
-  };
-
-  // Combine the FeaturedProducts and newProducts arrays
-  const allProducts = [...FeaturedProducts, ...newProducts];
-
-  // Get 10 random products for recommendations
-  const recommendedProducts = getRandomProducts(allProducts, 5);
-  // console.log(recommendedProducts)
+  const dispatch = useDispatch();
+  const [allproducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(getOneProducts({ id: params?._id }));
+      const storedOneProductsString = await AsyncStorage.getItem("@oneproduct");
+      const storedOneProducts = JSON.parse(storedOneProductsString);
+      setProdetails(storedOneProducts);
+      const storedTopProductsString = await AsyncStorage.getItem(
+        "@topproducts"
+      );
+      const storedTopProducts = JSON.parse(storedTopProductsString);
+      setAllProducts(storedTopProducts);
+    };
+    fetchData();
+  }, []);
+  console.log(allproducts);
   return (
     <View style={styles.outerContainer}>
       <View>
         <View>
-          <Image source={proDetails?.image} style={styles.image} />
+          {proDetails && proDetails.images && proDetails.images.length > 0 && (
+            <>
+              <AppImage
+                source={{ uri: proDetails.images[0].url }}
+                alt="Example Image"
+                style={styles.image}
+                noCache={false}
+              />
+            </>
+          )}
+          {/* <Image source={proDetails?.image} style={styles.image} /> */}
           <View style={styles.rateCategory}>
-            <Text style={styles.category}>{proDetails?.category}</Text>
+            <Text style={styles.category}>{proDetails?.category?.name}</Text>
             <Text style={styles.star}>
               <Entypo name="star" style={styles.starName} />
               {proDetails?.rating} (0 reviews)
@@ -94,7 +96,7 @@ const ProductDetails = ({ route }) => {
                   >
                     <Text style={styles.btnQtyTxt}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.qty}>{qty}</Text>
+                  <Text style={styles.qty}>{proDetails?.quantity}</Text>
                   <TouchableOpacity
                     style={styles.btnQty}
                     onPress={handleAddQty}
@@ -127,17 +129,30 @@ const ProductDetails = ({ route }) => {
                 <Text style={styles.desc}>{proDetails?.description}</Text>
               </View>
               <View style={styles.farmerContainer}>
-                <Image
-                  source={proDetails?.farmer?.image}
-                  style={styles.farmImage}
-                />
+                {proDetails?.farmer &&
+                proDetails?.farmer?.profilePic &&
+                proDetails.farmer?.images?.length > 0 ? (
+                  <AppImage
+                    source={{ uri: proDetails?.farmer?.profilePic.url }}
+                    alt="Example Image"
+                    style={styles.image}
+                    noCache={false}
+                  />
+                ) : (
+                  <DefaultProfileImage
+                    name={proDetails?.farmer?.name || ""}
+                    size={50}
+                    radius={2}
+                    backgroundColor="#3e8e0f"
+                  />
+                )}
                 <View style={styles.farmerDesc}>
                   <Text style={styles.farmeName}>
                     {proDetails?.farmer?.name}
                   </Text>
                   <Text>
                     <Entypo name="location-pin" style={styles.locationPin} />
-                    {proDetails?.farmer?.location}
+                    {proDetails?.farmer?.address}
                   </Text>
                 </View>
                 <View style={styles.contactContainer}>
@@ -149,7 +164,7 @@ const ProductDetails = ({ route }) => {
             <View style={styles.relatedProduct}>
               <Text style={styles.descTitle}>Related Product</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {recommendedProducts
+                {allproducts
                   ?.map((item) => (
                     <View
                       key={Math.floor(Math.random() * 30)}
@@ -162,7 +177,15 @@ const ProductDetails = ({ route }) => {
                         }
                       >
                         <View style={styles.card}>
-                          <Image source={item.image} style={styles.cardImage} />
+                          {item.images && (
+                            <AppImage
+                              source={{ uri: item?.images[0].url }}
+                              alt="Example Image"
+                              style={styles.cardImage}
+                              noCache={false}
+                            />
+                          )}
+                          {/* <Image source={item.image} style={styles.cardImage} /> */}
                           <View style={styles.overlay} />
                           <View style={styles.cardTitle}>
                             <Text style={styles.relatedTitle}>{item.name}</Text>
@@ -285,7 +308,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 5,
-    marginLeft: 60,
+    marginLeft: 5,
   },
   contact: {
     fontSize: 28,
@@ -375,6 +398,6 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   footer: {
-    bottom: 80,
+    bottom: 180,
   },
 });
