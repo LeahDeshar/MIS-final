@@ -7,9 +7,15 @@ export const fetchDataFromStorage = async () => {
     const storedUser = JSON.parse(storedUserString);
     const storedProfileString = await AsyncStorage.getItem("@profile");
     const storedProfile = JSON.parse(storedProfileString);
+
+    const storedCategoryString = await AsyncStorage.getItem("@category");
+    const storedCategory = JSON.parse(storedCategoryString);
+
     console.log("Token from AsyncStorage:", token);
     console.log("Current User from AsyncStorage:", storedUser);
     console.log("Current UserProfile from AsyncStorage:", storedProfile);
+
+    console.log("All category from AsyncStorage:", storedCategory);
   } catch (error) {
     console.error("Error reading data from AsyncStorage:", error);
   }

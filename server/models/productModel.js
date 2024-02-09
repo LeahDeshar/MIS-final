@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 //REVIEW MODELS
 const reviewSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, "name is required"],
-    },
     rating: {
       type: Number,
       default: 0,
@@ -43,14 +39,11 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, "product price is required"],
     },
-    stock: {
+    quantity: {
       type: Number,
       required: [true, "product stock required"],
     },
-    // quantity: {
-    //   type: Number,
-    //   required: [true, "product quantity required"],
-    // },
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -62,15 +55,20 @@ const productSchema = new mongoose.Schema(
         url: String,
       },
     ],
-    reviews: [reviewSchema],
-    rating:{
-      type: Number,
-      default: 0
+    farmer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "User is required"],
     },
-    numReviews:{
+    reviews: [reviewSchema],
+    rating: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
+    numReviews: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
