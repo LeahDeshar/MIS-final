@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 //REVIEW MODELS
 const reviewSchema = new mongoose.Schema(
   {
@@ -9,18 +8,13 @@ const reviewSchema = new mongoose.Schema(
     },
     comment: {
       type: String,
-      // required: [true, "comment is required"],
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
       required: [true, "user id is required"],
     },
-    // product: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Products",
-    //   required: [true, "product id is required"],
-    // },
+    
   },
   { timestamps: true }
 );
@@ -57,8 +51,7 @@ const productSchema = new mongoose.Schema(
     ],
     farmer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "User is required"],
+      ref: "Users",
     },
     reviews: [reviewSchema],
     rating: {

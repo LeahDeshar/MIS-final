@@ -16,6 +16,7 @@ export const getAllCategory = () => async (dispatch) => {
         "Content-Type": "application/json",
       },
     });
+    // console.log("get category");
     dispatch({
       type: "getCategoryDataSuccess",
       payload: data?.category,

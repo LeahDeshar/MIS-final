@@ -4,13 +4,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FeatureCard from "../features/FeatureCard";
 import newProducts from "../../data/NewProductsData";
 import { useNavigation } from "@react-navigation/native";
+import { getAllProducts } from "../../redux/productAction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
 const NewProducts = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const seeAllHandler = () => {
     navigation.navigate("New Products");
   };
@@ -18,6 +23,28 @@ const NewProducts = () => {
     console.log(id);
     navigation.navigate("Product Details", { _id: id });
   };
+
+  const [allproducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(getAllProducts());
+      const storedProductsString = await AsyncStorage.getItem("@allproducts");
+      const storedProducts = JSON.parse(storedProductsString);
+
+      // Sort the products by createdAt date in descending order
+      storedProducts.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      // Take the first 6 products
+      const newestProducts = storedProducts.slice(0, 6);
+
+      setAllProducts(newestProducts);
+      // setAllProducts(storedProducts);
+    };
+    fetchData();
+  }, []);
+
   return (
     <View>
       <View style={styles.featureContainer}>
@@ -28,7 +55,7 @@ const NewProducts = () => {
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={styles.container}>
-          {newProducts?.map((item) => (
+          {allproducts?.map((item) => (
             <View key={item._id}>
               <TouchableOpacity
                 style={styles.categoryContainer}

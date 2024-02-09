@@ -11,15 +11,12 @@ import {
 } from "../../redux/productReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppImage from "../AppImage";
+import { getAllProducts } from "../../redux/productAction";
 
 const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
   const navigation = useNavigation();
   const [isBookmarked, setBookmark] = useState(false);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    Image.prefetch(product.image);
-  }, [product.image]);
 
   const handleBookmark = () => {
     setBookmark(!isBookmarked);
@@ -35,22 +32,26 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
     }
   };
 
-  const { _id, name, description, image, price, rating } = product;
+  const { _id, name, description, images, price, rating } = product;
+  console.log("image test", images);
   return (
     <TouchableOpacity
       style={[styles.card, { width: cardWidth }]}
       onPress={() => navigation.navigate("Details", { _id: _id })}
     >
       <View>
-        <AppImage
-          source={{
-            uri: "https://rodaleinstitute.org/wp-content/uploads/FSTorganicBeans2010.jpg",
-          }}
-          alt="Example Image"
-          style={[styles.cardImage, { width: imgWidth }]}
-          // contain={true}
-          noCache={false}
-        />
+        {product && product.images && product.images.length > 0 && (
+          <>
+            <AppImage
+              source={{ uri: product.images[0].url }}
+              alt="Example Image"
+              style={[styles.cardImage, { width: imgWidth }]}
+              // contain={true}
+              noCache={false}
+            />
+          </>
+        )}
+
         <View
           style={{
             position: "absolute",
@@ -63,7 +64,7 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
           }}
         >
           <AntDesign name={"star"} color="orange" />
-          <Text>{rating}</Text>
+          <Text>{product.rating}</Text>
         </View>
 
         <TouchableOpacity
@@ -90,7 +91,7 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
           />
         </TouchableOpacity>
         <View style={styles.detailText}>
-          <Text style={styles.cardTitle}>{name}</Text>
+          <Text style={styles.cardTitle}>{product?.name}</Text>
           <Text style={{ fontSize: 17, marginTop: 5 }}>Rs.{price}</Text>
         </View>
       </View>

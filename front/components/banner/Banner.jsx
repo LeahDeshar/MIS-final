@@ -9,6 +9,7 @@ import {
 import React from "react";
 import Carousel, { PaginationLight } from "react-native-x-carousel";
 import { BannerData } from "../../data/BannerData";
+import AppImage from "../AppImage";
 const { width } = Dimensions.get("window");
 
 const Banner = () => {
@@ -16,7 +17,17 @@ const Banner = () => {
     <View key={data.coverImageUri} style={styles.cardContainer}>
       <Pressable onPress={() => alert(data._id)}>
         <View style={styles.cardWrapper}>
-          <Image style={styles.card} source={data.coverImageUri} />
+          {/* <AppImage */}
+
+          {/* <Image style={styles.card} source={{ uri: data.coverImageUri }} /> */}
+
+          <AppImage
+            source={{ uri: data.coverImageUri }}
+            alt="Example Image"
+            style={styles.card}
+            // contain={true}
+            noCache={false}
+          />
           <View
             style={[
               styles.cornerLabel,
@@ -49,26 +60,30 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    // height: '46.9%',
-    marginHorizontal: 100,
+    marginHorizontal: 20,
+    borderRadius: 25,
+    borderWidth: 0.7,
+    borderColor: "#0000004d",
+    paddingHorizontal: 10,
   },
   cardContainer: {
     alignItems: "center",
     justifyContent: "center",
-    height: 130,
+    height: 190,
   },
   cardWrapper: {
     overflow: "hidden",
     // width: 390
   },
   card: {
-    width: width * 1,
-    height: width * 0.45,
+    width: width * 0.89,
+    height: width * 0.43,
+    borderRadius: 25,
   },
   cornerLabel: {
     position: "absolute",
-    bottom: 0,
-    right: 0,
+    bottom: 15,
+    right: 15,
     borderTopLeftRadius: 8,
   },
   cornerLabelText: {
@@ -78,7 +93,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     paddingTop: 2,
-    paddingBottom: 2,
+    paddingBottom: 5,
   },
 });
 

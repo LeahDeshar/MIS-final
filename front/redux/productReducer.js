@@ -1,6 +1,7 @@
 // productReducer.js
 import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createReducer } from "@reduxjs/toolkit";
 
 const loadCartFromStorage = async () => {
   try {
@@ -142,3 +143,24 @@ export default productSlice.reducer;
 //     totalPrice + totalPrice * state.products.tax + state.products.shipping;
 //   return total;
 // };
+
+export const allProductReducer = createReducer(
+  { allproduct: null, error: null },
+  (builder) => {
+    //  GET USER DATA
+    builder.addCase("getAllProductRequest", (state, action) => {
+      console.log("load AllProduct");
+      state.loading = true;
+    });
+    builder.addCase("getAllProductSuccess", (state, action) => {
+      state.loading = false;
+      // state.isAuth = true;
+      state.allproduct = action.payload;
+    });
+    builder.addCase("getAllProductFail", (state, action) => {
+      console.log("picked AllProduct");
+      // state.isAuth = false;
+      state.error = action.payload;
+    });
+  }
+);

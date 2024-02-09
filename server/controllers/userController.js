@@ -4,7 +4,7 @@ import cloudinary from "cloudinary";
 
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, address, phone } = req.body;
+    const { name, email, password, address, phone, role } = req.body;
 
     console.log(req.body);
     if (!name || !email || !password || !address || !phone) {
@@ -28,6 +28,7 @@ export const registerController = async (req, res) => {
       password,
       address,
       phone,
+      role,
     });
     if (!user) {
       return res.status(400).json({
