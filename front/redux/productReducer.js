@@ -32,6 +32,8 @@ const productSlice = createSlice({
     shipping: 0,
     netTotal: 0,
     location: "",
+    paymentMethod: "",
+    shipMethod: "",
   },
   reducers: {
     loadCart: (state, action) => {
@@ -117,6 +119,14 @@ const productSlice = createSlice({
       console.log(action.payload, "location payload");
       state.location = action.payload;
     },
+    setGlobalPayMethod: (state, action) => {
+      console.log(action.payload, "paymentMethod payload");
+      state.paymentMethod = action.payload;
+    },
+    setGlobalShipMethod: (state, action) => {
+      console.log(action.payload, "shipMethod payload");
+      state.shipMethod = action.payload;
+    },
   },
 });
 
@@ -130,6 +140,8 @@ export const {
   calculateNetTotal,
   calculateTotal,
   setGlobalLocation,
+  setGlobalShipMethod,
+  setGlobalPayMethod,
 } = productSlice.actions;
 export default productSlice.reducer;
 

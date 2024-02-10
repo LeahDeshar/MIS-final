@@ -1,23 +1,33 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
+import AppImage from "../AppImage";
 
 const OrderItem = ({ order }) => {
+  // console.log("order", order?.images[0]?.url);
   return (
     <View style={styles.container}>
-      <View style={styles.orderinfo}>
-        <Text>Order ID : {order._id}</Text>
-        <Text>Date : {order.date}</Text>
+      <AppImage
+        source={{ uri: order?.images[0]?.url }}
+        alt="Example Image"
+        style={styles.image}
+        // contain={true}
+        noCache={false}
+      />
+      <View style={{ marginLeft: 10, marginTop: 5 }}>
+        <Text>Product name : {order?.name}</Text>
+        <Text>Price : {order.price}</Text>
+        <Text>Quantity : {order.quantity}</Text>
       </View>
-      <Text>Product name : {order.productInfo.name}</Text>
-      <Text>Price : {order.productInfo.price}</Text>
-      <Text>Quantity : {order.productInfo.qty}</Text>
-      <Text>Total Amount : {order.totalAmount} $</Text>
-      <Text style={styles.status}>Order Status : {order.status}</Text>
+
+      {/* <Text>Total Amount : {order.totalAmount} $</Text>
+      <Text style={styles.status}>Order Status : {order.status}</Text> */}
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
+
     backgroundColor: "#ffffff",
     margin: 10,
     padding: 10,
@@ -35,6 +45,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     borderColor: "lightgray",
     padding: 5,
+  },
+  image: {
+    height: 80,
+    width: 80,
+    resizeMode: "cover",
+    borderRadius: 10,
   },
 });
 export default OrderItem;

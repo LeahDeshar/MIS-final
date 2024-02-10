@@ -102,7 +102,13 @@ const App = () => {
             <Stack.Screen name="Notification" component={Notifications} />
             <Stack.Screen name="Account" component={AccountUser} />
             <Stack.Screen name="Payment" component={Payment} />
-            <Stack.Screen name="finalpay" component={Finalpay} />
+            <Stack.Screen
+              name="finalpay"
+              component={Finalpay}
+              options={{
+                headerShown: false,
+              }}
+            />
 
             <Stack.Screen
               name="ForumSet"
@@ -150,6 +156,14 @@ const App = () => {
               component={OrderManagement}
               options={{
                 title: "Order Management",
+              }}
+            />
+            <Stack.Screen
+              name="myorders"
+              component={MyOrders}
+              options={{
+                title: "My Order",
+                headerShown: false,
               }}
             />
             <Stack.Screen

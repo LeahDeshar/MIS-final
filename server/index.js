@@ -11,6 +11,7 @@ import productRouter from "./routes/productRoutes.js";
 import categoryRouter from "./routes/categoryRoute.js";
 import orderRouter from "./routes/orderRoutes.js";
 import helmet from "helmet";
+import nodemailer from "nodemailer";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
@@ -24,6 +25,39 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "your-email@gmail.com",
+    pass: "your-email-password",
+  },
+});
+
+// Function to send email
+const sendEmail = async (recipient, subject, htmlContent) => {
+  try {
+    // Send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: "your-email@gmail.com",
+      to: recipient,
+      subject: subject,
+      html: htmlContent,
+    });
+
+    console.log("Email sent: " + info.response);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
+
+// Example usage
+const orderConfirmationEmail = `
+  <p>Dear User,</p>
+  <p>Your order has been confirmed by the seller. Thank you for shopping with us!</p>
+  <p>Best regards,<br/>Your Shop</p>
+`;
+
+sendEmail("user@example.com", "Order Confirmation", orderConfirmationEmail);
 // cloudinary config
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,

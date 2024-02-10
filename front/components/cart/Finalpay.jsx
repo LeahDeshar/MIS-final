@@ -1,8 +1,14 @@
 import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Finalpay = () => {
+  const navigation = useNavigation();
+
+  const goToOrderPage = () => {
+    navigation.navigate("myorders");
+  };
   return (
     <SafeAreaView>
       <LottieView
@@ -42,7 +48,8 @@ const Finalpay = () => {
         }}
         autoPlay
         loop={false}
-        speed={0.7}
+        speed={0.6}
+        onAnimationFinish={goToOrderPage}
       />
     </SafeAreaView>
   );

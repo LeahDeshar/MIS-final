@@ -16,7 +16,13 @@ import { useRef } from "react";
 import AppCheckBox from "../AppCheckBox";
 import Footer from "../layout/Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateNetTotal, setShipping } from "../../redux/productReducer";
+import {
+  calculateNetTotal,
+  setGlobalLocation,
+  setGlobalPayMethod,
+  setGlobalShipMethod,
+  setShipping,
+} from "../../redux/productReducer";
 const Checkout = () => {
   const navigation = useNavigation();
   const BottomShipRef = useRef(null);
@@ -29,13 +35,15 @@ const Checkout = () => {
   const handleCheckBoxChange = (option) => {
     setSelectedOption(option);
     dispatch(setShipping(option));
+    dispatch(setGlobalShipMethod(option));
+
     dispatch(calculateNetTotal());
 
     BottomShipRef.current?.close();
   };
   const handlePayMethodChange = (option) => {
     setSelectedpayOption(option);
-    // dispatch(setShipping(option));
+    dispatch(setGlobalPayMethod(option));
     // dispatch(calculateNetTotal());
 
     BottomRef.current?.close();
