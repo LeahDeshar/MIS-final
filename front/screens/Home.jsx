@@ -17,6 +17,8 @@ import { fetchDataFromStorage } from "../components/auth/localstorage";
 import { LogBox } from "react-native";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
+  "Warning: Encountered two children with the same key",
+  "Error fetching address",
 ]);
 const Home = () => {
   // const user = 'seller'

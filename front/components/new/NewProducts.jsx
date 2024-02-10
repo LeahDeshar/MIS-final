@@ -19,11 +19,6 @@ const NewProducts = () => {
   const seeAllHandler = () => {
     navigation.navigate("New Products");
   };
-  const handleMoreBtn = (id) => {
-    console.log(id);
-    dispatch(getOneProducts(id));
-    navigation.navigate("Product Details", { _id: id });
-  };
 
   const [allproducts, setAllProducts] = useState([]);
   useEffect(() => {
@@ -32,16 +27,12 @@ const NewProducts = () => {
       const storedProductsString = await AsyncStorage.getItem("@allproducts");
       const storedProducts = JSON.parse(storedProductsString);
 
-      // Sort the products by createdAt date in descending order
       storedProducts.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-
-      // Take the first 6 products
       const newestProducts = storedProducts.slice(0, 6);
 
       setAllProducts(newestProducts);
-      // setAllProducts(storedProducts);
     };
     fetchData();
   }, []);
@@ -58,10 +49,7 @@ const NewProducts = () => {
         <View style={styles.container}>
           {allproducts?.map((item) => (
             <View key={item._id}>
-              <TouchableOpacity
-                style={styles.categoryContainer}
-                onPress={() => handleMoreBtn(item._id)}
-              >
+              <TouchableOpacity style={styles.categoryContainer}>
                 <FeatureCard product={item} cardWidth={200} />
               </TouchableOpacity>
             </View>

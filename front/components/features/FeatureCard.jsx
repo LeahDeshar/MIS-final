@@ -35,7 +35,7 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
   return (
     <TouchableOpacity
       style={[styles.card, { width: cardWidth }]}
-      onPress={() => navigation.navigate("Details", { _id: product?._id })}
+      onPress={() => navigation.navigate("Details", { product })}
     >
       <View>
         {product && product.images && product.images.length > 0 && (
