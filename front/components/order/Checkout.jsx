@@ -23,6 +23,8 @@ import {
   setGlobalShipMethod,
   setShipping,
 } from "../../redux/productReducer";
+import * as Notifications from "expo-notifications";
+
 const Checkout = () => {
   const navigation = useNavigation();
   const BottomShipRef = useRef(null);
@@ -80,10 +82,57 @@ const Checkout = () => {
 
   const handleCheckout = () => {
     if (selectedpayOption === "paypal") {
+      sendNotification(); // Call the function to send notification after navigating
       navigation.navigate("Payment");
     } else if (selectedpayOption === "cod") {
+      sendNotification(); // Call the function to send notification after navigating
+
       navigation.navigate("finalpay");
     }
+  };
+
+  // const sendNotification = async () => {
+  //   const notificationTime = new Date();
+  //   notificationTime.setSeconds(notificationTime.getSeconds() + 30);
+  //   const notificationContent = {
+  //     title: "Payment Successful",
+  //     body: "Your order has been confirmed. Thank you for your purchase!",
+  //   };
+
+  //   await Notifications.scheduleNotificationAsync({
+  //     handleNotification: async () => ({
+  //       shouldShowAlert: true,
+  //       shouldPlaySound: false,
+  //       shouldSetBadge: false,
+  //     }),
+  //     content: notificationContent,
+  //     trigger: {
+  //       date: notificationTime,
+  //     },
+  //   });
+  // };
+  const sendNotification = async () => {
+    const notificationTime = new Date();
+    notificationTime.setSeconds(notificationTime.getSeconds() + 10);
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+
+    // Second, call the method
+
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "CULTIVISTA",
+        body: "Thank you for your order. Your items will be prepared shortly.",
+      },
+      trigger: {
+        date: notificationTime,
+      },
+    });
   };
   return (
     <View style={{ paddingHorizontal: 15, flex: 1 }}>

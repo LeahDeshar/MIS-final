@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30, // Half of the width and height for a perfect circle
-    backgroundColor: "#000000", // Corrected color code (without the extra '7')
+    backgroundColor: "#102c00", // Corrected color code (without the extra '7')
     position: "absolute", // Use position absolute for bottom positioning
     bottom: 16,
     right: "43%",
@@ -161,6 +161,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   active: {
-    color: "blue",
+    color: "#2c7d00",
   },
 });

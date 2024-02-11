@@ -6,7 +6,9 @@ import { createReducer } from "@reduxjs/toolkit";
 const loadCartFromStorage = async () => {
   try {
     const cartData = await AsyncStorage.getItem("cart");
-    console.log(JSON.parse(cartData));
+    const theme = await AsyncStorage.getItem("theme");
+
+    console.log(JSON.parse(cartData), theme);
     return cartData ? JSON.parse(cartData) : [];
   } catch (error) {
     console.error("Error loading cart from AsyncStorage:", error);
@@ -22,6 +24,14 @@ const saveCartToStorage = async (cart) => {
   }
 };
 
+const saveThemeToStorage = async (theme) => {
+  try {
+    await AsyncStorage.setItem("theme", theme);
+  } catch (error) {
+    console.error("Error saving theme to AsyncStorage:", error);
+  }
+};
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
@@ -34,6 +44,7 @@ const productSlice = createSlice({
     location: "",
     paymentMethod: "",
     shipMethod: "",
+    theme: "light",
   },
   reducers: {
     loadCart: (state, action) => {
@@ -127,6 +138,11 @@ const productSlice = createSlice({
       console.log(action.payload, "shipMethod payload");
       state.shipMethod = action.payload;
     },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+      saveThemeToStorage(state.theme);
+      loadCartFromStorage();
+    },
   },
 });
 
@@ -142,6 +158,7 @@ export const {
   setGlobalLocation,
   setGlobalShipMethod,
   setGlobalPayMethod,
+  setTheme,
 } = productSlice.actions;
 export default productSlice.reducer;
 

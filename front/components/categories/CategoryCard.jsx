@@ -50,5 +50,6 @@ const styles = StyleSheet.create({
   cateTitle: {
     fontSize: 25,
     fontWeight: "bold",
+    color: "#102c00",
   },
 });

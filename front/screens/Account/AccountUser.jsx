@@ -19,11 +19,20 @@ import Footer from "../../components/layout/Footer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getUserData } from "../../redux/userAction";
 import { fetchDataFromStorage } from "../../components/auth/localstorage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setTheme } from "../../redux/productReducer";
 
 const AccountUser = ({ navigation }) => {
   const dispatch = useDispatch();
   const [profile, setProfile] = useState(null);
+  const theme = useSelector((state) => state.products.theme);
+
+  const handleThemeChange = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+
+    console.log(newTheme, "newTheme");
+    dispatch(setTheme(newTheme));
+  };
   useEffect(() => {
     dispatch(getUserData());
     fetchDataFromStorage();
@@ -61,49 +70,78 @@ const AccountUser = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <ScrollView style={styles.btnContainer}>
+      <ScrollView
+        style={theme === "dark" ? styles.DarkbtnContainer : styles.btnContainer}
+      >
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("Profile")}
         >
-          <AntDesign name="edit" style={styles.btnText} />
-          <Text style={styles.btnText}>Edit Profile</Text>
+          <AntDesign
+            name="edit"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Edit Profile
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("myorders", { id: UserData._id })}
         >
-          <AntDesign name="bars" style={styles.btnText} />
-          <Text style={styles.btnText}>My Orders</Text>
+          <AntDesign
+            name="bars"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            My Orders
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("notification")}
         >
-          <AntDesign name="bells" style={styles.btnText} />
-          <Text style={styles.btnText}>Notification Setting</Text>
+          <AntDesign
+            name="bells"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Notification Setting
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("notification")}
         >
-          <Entypo name="language" style={styles.btnText} />
-          <Text style={styles.btnText}>Change Language</Text>
+          <Entypo
+            name="language"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Change Language
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("notification")}
         >
-          <AntDesign name="key" style={styles.btnText} />
-          <Text style={styles.btnText}>Change Password</Text>
+          <AntDesign
+            name="key"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Change Password
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate("notification")}
-        >
-          <Entypo name="light-up" style={styles.btnText} />
-          <Text style={styles.btnText}>Change Theme</Text>
+        <TouchableOpacity style={styles.btn} onPress={handleThemeChange}>
+          <Entypo
+            name="light-up"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Change Theme
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
@@ -111,8 +149,13 @@ const AccountUser = ({ navigation }) => {
             navigation.navigate("adminPanel", { id: UserData._id })
           }
         >
-          <AntDesign name="windows" style={styles.btnText} />
-          <Text style={styles.btnText}>Admin Panel</Text>
+          <AntDesign
+            name="windows"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Admin Panel
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
@@ -120,29 +163,49 @@ const AccountUser = ({ navigation }) => {
             navigation.navigate("adminPanel", { id: UserData._id })
           }
         >
-          <MaterialIcons name="policy" style={styles.btnText} />
-          <Text style={styles.btnText}>Privacy Policy</Text>
+          <MaterialIcons
+            name="policy"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Privacy Policy
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("notification")}
         >
-          <AntDesign name="info" style={styles.btnText} />
-          <Text style={styles.btnText}>About App </Text>
+          <AntDesign
+            name="info"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            About App{" "}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("notification")}
         >
-          <MaterialIcons name="contact-support" style={styles.btnText} />
-          <Text style={styles.btnText}>Technical Support </Text>
+          <MaterialIcons
+            name="contact-support"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Technical Support{" "}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate("notification")}
         >
-          <AntDesign name="logout" style={styles.btnText} />
-          <Text style={styles.btnText}>Logout </Text>
+          <AntDesign
+            name="logout"
+            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+          />
+          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
+            Logout{" "}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -179,6 +242,8 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     backgroundColor: "#fff",
+    // backgroundColor: "#000000",
+
     flex: 1,
   },
   name: {
@@ -192,6 +257,12 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     backgroundColor: "#fff",
+    borderRadius: 10,
+    marginTop: 80,
+    paddingLeft: 10,
+  },
+  DarkbtnContainer: {
+    backgroundColor: "#000000",
     borderRadius: 10,
     marginTop: 80,
     paddingLeft: 10,
@@ -211,6 +282,12 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   btnText: {
+    fontSize: 15,
+    marginTop: 10,
+    marginLeft: 10,
+  },
+  darkbtnText: {
+    color: "#f7f7f7",
     fontSize: 15,
     marginTop: 10,
     marginLeft: 10,

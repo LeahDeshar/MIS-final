@@ -40,7 +40,7 @@ import Location from "./components/order/Location";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
 import Payment from "./components/cart/Payment";
 import Finalpay from "./components/cart/Finalpay";
@@ -48,6 +48,7 @@ import { registerRootComponent } from "expo";
 import { AppRegistry } from "react-native";
 
 import { LogBox } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
 ]);
@@ -85,23 +86,154 @@ const App = () => {
               component={Register}
             />
 
-            <Stack.Screen name="Featured" component={AllFeatures} />
-            <Stack.Screen name="All Category" component={AllCategory} />
-            <Stack.Screen name="Search Filter" component={FilterSearch} />
-            <Stack.Screen name="New Products" component={AllNewProducts} />
-            <Stack.Screen name="Top Sell Products" component={AllTopsell} />
-            <Stack.Screen name="Recommend Products" component={AllRecommend} />
-            <Stack.Screen name="Product Details" component={ProductDetails} />
-            <Stack.Screen name="Details" component={FeatureDetails} />
-            <Stack.Screen name="Confirmation" component={Checkout} />
-            <Stack.Screen name="Location" component={Location} />
+            <Stack.Screen
+              name="Featured"
+              component={AllFeatures}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="All Category"
+              component={AllCategory}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Search Filter"
+              component={FilterSearch}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="New Products"
+              component={AllNewProducts}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Top Sell Products"
+              component={AllTopsell}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Recommend Products"
+              component={AllRecommend}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Product Details"
+              component={ProductDetails}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Details"
+              component={FeatureDetails}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Confirmation"
+              component={Checkout}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Location"
+              component={Location}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
 
-            <Stack.Screen name="Category" component={CategoryDetail} />
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="Cart" component={Cart} />
-            <Stack.Screen name="Notification" component={Notifications} />
-            <Stack.Screen name="Account" component={AccountUser} />
-            <Stack.Screen name="Payment" component={Payment} />
+            <Stack.Screen
+              name="Category"
+              component={CategoryDetail}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={Profile}
+              options={{
+                title: "Welcome",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Cart"
+              component={Cart}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Notification"
+              component={Notifications}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Account"
+              component={AccountUser}
+              options={{
+                title: "Welcome",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+                headerLeft: null,
+              }}
+            />
+            <Stack.Screen
+              name="Payment"
+              component={Payment}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
             <Stack.Screen
               name="finalpay"
               component={Finalpay}
@@ -115,6 +247,9 @@ const App = () => {
               component={ForumSettings}
               options={{
                 title: "Forum Settings",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
               }}
             />
 
@@ -123,10 +258,29 @@ const App = () => {
               component={AddForum}
               options={{
                 title: "Create A Post",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
               }}
             />
-            <Stack.Screen name="My Post" component={SeeMyForum} />
-            <Stack.Screen name="Saved" component={Saved} />
+            <Stack.Screen
+              name="My Post"
+              component={SeeMyForum}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Saved"
+              component={Saved}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+              }}
+            />
             <Stack.Screen
               name="UpdateForum"
               component={UpdateForum}
@@ -141,6 +295,9 @@ const App = () => {
               options={{
                 title: "Forum",
                 headerRight: () => <AddButton />,
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
               }}
             />
             <Stack.Screen

@@ -15,6 +15,7 @@ import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import CategoryCard from "../categories/CategoryCard";
 import LocationPickerModal from "../LocationPickerModal";
+import { useSelector } from "react-redux";
 // import Categories from '../category/Categories';
 
 const Header = () => {
@@ -45,22 +46,47 @@ const Header = () => {
     setLocation(selectedLocation);
     setModalVisible(false);
   };
+  const theme = useSelector((state) => state.products.theme);
 
   return (
-    <View style={styles.outerContainer}>
+    <View
+      style={[
+        styles.outerContainer,
+        { backgroundColor: theme === "dark" ? "#000" : "#fff" },
+      ]}
+    >
       <View style={styles.topContainer}>
         <View>
-          <TouchableOpacity style={styles.menuBtn} onPress={searchHandler}>
-            <Ionicons name="menu-outline" style={styles.menuBtn} />
+          <TouchableOpacity style={[styles.menuBtn]} onPress={searchHandler}>
+            <Ionicons
+              name="menu-outline"
+              style={[
+                styles.menuBtn,
+                { color: theme === "dark" ? "#fff" : "#000" },
+              ]}
+            />
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={styles.cultivista}>CultiVista</Text>
+          <Text
+            style={[
+              styles.cultivista,
+              { color: theme === "dark" ? "#fff" : "#000" },
+            ]}
+          >
+            CultiVista
+          </Text>
         </View>
         <View>
           {user === "buyer" ? (
             <TouchableOpacity style={styles.slideBtn} onPress={slideHandler}>
-              <FontAwesome name="sliders" style={styles.slideBtn} />
+              <FontAwesome
+                name="sliders"
+                style={[
+                  styles.slideBtn,
+                  { color: theme === "dark" ? "#fff" : "#000" },
+                ]}
+              />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -113,10 +139,17 @@ export default Header;
 const styles = StyleSheet.create({
   outerContainer: {
     backgroundColor: "white",
+    height: 175,
+    marginTop: 15,
+    paddingTop: 20,
+    paddingBottom: 10,
+    // borderWidth: 1
+  },
+  darkouterContainer: {
+    backgroundColor: "#000",
     height: 160,
     marginTop: 15,
     paddingTop: 20,
-    // borderWidth: 1
   },
   container: {
     flex: 1,
@@ -139,6 +172,7 @@ const styles = StyleSheet.create({
   cultivista: {
     fontSize: 25,
     fontWeight: "bold",
+    color: "white",
     // paddingTop: 40,
     // marginVertical: 10
   },

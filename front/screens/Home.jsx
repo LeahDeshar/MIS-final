@@ -15,18 +15,22 @@ import Footer from "../components/layout/Footer";
 import DashBoard from "../components/seller/DashBoard";
 import { fetchDataFromStorage } from "../components/auth/localstorage";
 import { LogBox } from "react-native";
+import { useSelector } from "react-redux";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
   "Warning: Encountered two children with the same key",
   "Error fetching address",
+  "Warning: Each child in a list should have a ",
+  "Error fetching user data: [AxiosError: Network Error]",
 ]);
 const Home = () => {
   // const user = 'seller'
   const user = "buyer";
+  const theme = useSelector((state) => state.products.theme);
   fetchDataFromStorage();
 
   return (
-    <View style={styles.container}>
+    <View style={theme === "dark" ? styles.darkcontainer : styles.container}>
       <Header />
       <Layout>
         {user === "buyer" ? (
@@ -54,6 +58,10 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
+    flex: 1,
+  },
+  darkcontainer: {
+    backgroundColor: "#000",
     flex: 1,
   },
 });

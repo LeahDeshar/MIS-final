@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontSize: 25,
     fontWeight: "bold",
+    color: "#102c00",
   },
   seeall: {
     fontSize: 14,
