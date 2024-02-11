@@ -63,18 +63,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#c7c7c7",
   },
   image: {
-    height: 80,
-    width: 80,
+    height: 100,
+    width: 100,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+
     resizeMode: "cover",
   },
   name: {
-    fontSize: 10,
+    fontSize: 14,
   },
   btnContainer: {
     flexDirection: "row",

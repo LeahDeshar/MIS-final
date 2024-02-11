@@ -27,8 +27,17 @@ const Cart = ({ navigation, route }) => {
     }
     navigation.navigate("Confirmation");
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme === "dark" ? "#000" : "#fff",
+          flex: 1,
+        },
+      ]}
+    >
       <Text style={styles.heading}>
         {cart?.length > 0
           ? `You have ${cart?.length} items in the cart`
@@ -44,14 +53,36 @@ const Cart = ({ navigation, route }) => {
             </ScrollView>
 
             <View>
-              <View style={styles.grandTotal}>
+              <View
+                style={[
+                  styles.grandTotal,
+                  {
+                    backgroundColor: theme === "dark" ? "#525252" : "#fff",
+                  },
+                ]}
+              >
                 <PriceTable title={"Net Total"} price={totalPrice} />
               </View>
               <TouchableOpacity
-                style={styles.btnCheckout}
+                style={[
+                  styles.btnCheckout,
+                  {
+                    backgroundColor: theme === "dark" ? "#fff" : "#000",
+                    // flex: 1,
+                  },
+                ]}
                 onPress={handleCheckout}
               >
-                <Text style={styles.btnCheckoutText}>CHECKOUT</Text>
+                <Text
+                  style={[
+                    styles.btnCheckoutText,
+                    {
+                      color: theme === "dark" ? "#000" : "#fff",
+                    },
+                  ]}
+                >
+                  CHECKOUT
+                </Text>
               </TouchableOpacity>
             </View>
           </>
@@ -64,21 +95,22 @@ const Cart = ({ navigation, route }) => {
 export default Cart;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-  },
+  // container: {
+  //   backgroundColor: "white",
+  // },
   heading: {
     textAlign: "center",
     color: "green",
-    marginTop: 10,
+    marginVertical: 10,
+    fontSize: 16,
+    paddingTop: 10,
   },
   grandTotal: {
-    borderWidth: 1,
-    borderColor: "lightgray",
-    backgroundColor: "#fff",
     padding: 5,
     margin: 5,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
+    borderRadius: 5,
+    paddingVertical: 10,
   },
   btnCheckout: {
     marginTop: 20,

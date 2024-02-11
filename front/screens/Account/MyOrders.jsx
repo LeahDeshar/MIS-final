@@ -12,14 +12,18 @@ const MyOrders = () => {
   const payMethod = useSelector((state) => state.products.paymentMethod);
 
   console.log(netTotal);
-
+  const theme = useSelector((state) => state.products.theme);
   return (
     <Layout>
       <View style={styles.container}>
         <Text style={styles.heading}>My Orders</Text>
         <View style={styles.orderinfo}>
-          <Text>Order ID : 124215135235</Text>
-          <Text>Date : {new Date().toLocaleDateString()}</Text>
+          <Text style={{ color: theme === "dark" ? "#fff" : "#000" }}>
+            Order ID : 124215135235
+          </Text>
+          <Text style={{ color: theme === "dark" ? "#fff" : "#000" }}>
+            Date : {new Date().toLocaleDateString()}
+          </Text>
         </View>
         <ScrollView>
           {cart?.map((order) => (
@@ -28,16 +32,43 @@ const MyOrders = () => {
             </>
           ))}
         </ScrollView>
-        <View>
-          <Text style={styles.status}>Total : {netTotal}$</Text>
-          <Text style={[styles.status, styles.shipping]}>
+        <View style={{ marginBottom: 300 }}>
+          <Text
+            style={[
+              styles.status,
+              { color: theme === "dark" ? "#fff" : "#000" },
+            ]}
+          >
+            Total : {netTotal}$
+          </Text>
+          <Text
+            style={[
+              styles.status,
+              styles.shipping,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
+          >
             Shipping :{" "}
             {shipping === "in" ? "Inside Kathmandu" : "Outside Kathmandu"}
           </Text>
-          <Text style={styles.status}>
+          <Text
+            style={[
+              styles.status,
+              { color: theme === "dark" ? "#fff" : "#000" },
+            ]}
+          >
             Payment Method : {payMethod.toUpperCase()}
           </Text>
-          <Text style={styles.status}>Status: pending...</Text>
+          <Text
+            style={[
+              styles.status,
+              { color: theme === "dark" ? "#fff" : "#000" },
+            ]}
+          >
+            Status: pending...
+          </Text>
         </View>
       </View>
     </Layout>

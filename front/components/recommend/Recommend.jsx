@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FeaturedProducts } from "../../data/FeaturedData";
 import newProducts from "../../data/NewProductsData";
 import FeatureCard from "../features/FeatureCard";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAllProducts } from "../../redux/productAction";
 import AppImage from "../AppImage";
@@ -25,13 +25,27 @@ const Recommend = () => {
     };
     fetchData();
   }, []);
-
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View style={styles.outerContainer}>
       <View style={styles.featureContainer}>
-        <Text style={styles.featureTitle}>Recommend</Text>
+        <Text
+          style={[
+            styles.featureTitle,
+            { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+          ]}
+        >
+          Recommend
+        </Text>
         <TouchableOpacity style={styles.searchBtn} onPress={seeAllHandler}>
-          <Text style={styles.seeall}>See All</Text>
+          <Text
+            style={[
+              styles.seeall,
+              { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+            ]}
+          >
+            See All
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -52,8 +66,17 @@ const Recommend = () => {
                     </>
                   )}
                   <View style={styles.cardDetail}>
-                    <Text style={styles.cardTitle}>{item.name}</Text>
-                    <Text>{item.description.split(".")[0]}</Text>
+                    <Text
+                      style={[
+                        styles.cardTitle,
+                        { color: theme === "dark" ? "#fff" : "#000" },
+                      ]}
+                    >
+                      {item.name}
+                    </Text>
+                    <Text style={{ color: theme === "dark" ? "#fff" : "#000" }}>
+                      {item.description.split(".")[0]}
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>

@@ -4,6 +4,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
   const route = useRoute();
@@ -18,17 +19,37 @@ const Footer = () => {
       navigation.navigate("CreateProduct");
     }
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme === "dark" ? "#141414" : "#fff" },
+      ]}
+    >
       <TouchableOpacity
         style={styles.menuContainer}
         onPress={() => navigation.navigate("home")}
       >
         <AntDesign
           name="home"
-          style={[styles.icon, route.name === "home" && styles.active]}
+          style={[
+            styles.icon,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "home" && styles.active,
+          ]}
         />
-        <Text style={[styles.iconText, route.name === "home" && styles.active]}>
+        <Text
+          style={[
+            styles.iconText,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "home" && styles.active,
+          ]}
+        >
           Home
         </Text>
       </TouchableOpacity>
@@ -39,11 +60,20 @@ const Footer = () => {
       >
         <AntDesign
           name="bells"
-          style={[styles.icon, route.name === "Notification" && styles.active]}
+          style={[
+            styles.icon,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "Notification" && styles.active,
+          ]}
         />
         <Text
           style={[
             styles.iconText,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
             route.name === "Notification" && styles.active,
           ]}
         >
@@ -65,10 +95,22 @@ const Footer = () => {
       >
         <AntDesign
           name="user"
-          style={[styles.icon, route.name === "Account" && styles.active]}
+          style={[
+            styles.icon,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "Account" && styles.active,
+          ]}
         />
         <Text
-          style={[styles.iconText, route.name === "Account" && styles.active]}
+          style={[
+            styles.iconText,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "Account" && styles.active,
+          ]}
         >
           Account
         </Text>
@@ -81,10 +123,22 @@ const Footer = () => {
         >
           <AntDesign
             name="shoppingcart"
-            style={[styles.icon, route.name === "Cart" && styles.active]}
+            style={[
+              styles.icon,
+              route.name === "Cart" && styles.active,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
           />
           <Text
-            style={[styles.iconText, route.name === "Cart" && styles.active]}
+            style={[
+              styles.iconText,
+              route.name === "Cart" && styles.active,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
           >
             Cart
           </Text>
@@ -96,10 +150,22 @@ const Footer = () => {
         >
           <MaterialCommunityIcons
             name="truck-outline"
-            style={[styles.icon, route.name === "Cart" && styles.active]}
+            style={[
+              styles.icon,
+              route.name === "Cart" && styles.active,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
           />
           <Text
-            style={[styles.iconText, route.name === "Cart" && styles.active]}
+            style={[
+              styles.iconText,
+              route.name === "Cart" && styles.active,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
           >
             Orders
           </Text>
@@ -116,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
 
-    backgroundColor: "white",
+    // backgroundColor: "white",
     display: "flex",
     width: "90%",
     flex: 1,
@@ -138,7 +204,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 25,
-    color: "#000",
   },
   plusContainer: {
     width: 60,

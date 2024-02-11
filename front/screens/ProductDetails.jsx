@@ -22,7 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet/src";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet/src/components/bottomSheet";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getOneProducts } from "../redux/productAction";
 
 const ProductDetails = ({ route }) => {
@@ -101,8 +101,16 @@ const ProductDetails = ({ route }) => {
   const handleCloseModalPress = () => {
     BottomRef.current.close();
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <View style={styles.outerContainer}>
+    <View
+      style={[
+        styles.outerContainer,
+        {
+          backgroundColor: theme === "dark" ? "#000" : "#fff",
+        },
+      ]}
+    >
       <BottomSheetModalProvider>
         <View>
           <View>

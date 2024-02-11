@@ -13,6 +13,7 @@ import { CardField, confirmPayment } from "@stripe/stripe-react-native";
 import ButtonComp from "./ButtonComp";
 import paypalApi from "./Paypalapis";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 // create a component
 const Payment = () => {
@@ -59,9 +60,16 @@ const Payment = () => {
     setPaypalUrl(null);
     setAccessToken(null);
   };
-
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme === "dark" ? "#000" : "#fff",
+        },
+      ]}
+    >
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{ padding: 16 }}>
           <CardField

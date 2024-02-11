@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import FeatureCard from "../features/FeatureCard";
 import newProducts from "../../data/NewProductsData";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getTop6Products } from "../../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const NewProducts = () => {
@@ -29,12 +29,27 @@ const NewProducts = () => {
   const seeAllHandler = () => {
     navigation.navigate("Top Sell Products");
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View>
       <View style={styles.featureContainer}>
-        <Text style={styles.featureTitle}>Top Sell Products</Text>
+        <Text
+          style={[
+            styles.featureTitle,
+            { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+          ]}
+        >
+          Top Sell Products
+        </Text>
         <TouchableOpacity style={styles.searchBtn} onPress={seeAllHandler}>
-          <Text style={styles.seeall}>See All</Text>
+          <Text
+            style={[
+              styles.seeall,
+              { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+            ]}
+          >
+            See All
+          </Text>
         </TouchableOpacity>
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

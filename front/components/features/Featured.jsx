@@ -10,7 +10,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { FeaturedProducts } from "../../data/FeaturedData";
 import FeatureCard from "./FeatureCard";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -30,13 +30,27 @@ const Featured = () => {
     };
     fetchData();
   }, []);
-
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View>
       <View style={styles.featureContainer}>
-        <Text style={styles.featureTitle}>Featured</Text>
+        <Text
+          style={[
+            styles.featureTitle,
+            { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+          ]}
+        >
+          Featured
+        </Text>
         <TouchableOpacity style={styles.searchBtn} onPress={seeAllHandler}>
-          <Text style={styles.seeall}>See All</Text>
+          <Text
+            style={[
+              styles.seeall,
+              { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+            ]}
+          >
+            See All
+          </Text>
         </TouchableOpacity>
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

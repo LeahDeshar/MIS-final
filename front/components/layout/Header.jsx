@@ -55,6 +55,8 @@ const Header = () => {
         { backgroundColor: theme === "dark" ? "#000" : "#fff" },
       ]}
     >
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
+
       <View style={styles.topContainer}>
         <View>
           <TouchableOpacity style={[styles.menuBtn]} onPress={searchHandler}>
@@ -110,7 +112,10 @@ const Header = () => {
         >
           <TextInput
             pointerEvents="none"
-            style={styles.input}
+            style={[
+              styles.input,
+              { shadowColor: theme === "dark" ? "#fff" : "#000" },
+            ]}
             value={search}
             onChangeText={(text) => setSearch(text)}
           />
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
   outerContainer: {
     backgroundColor: "white",
     height: 175,
-    marginTop: 15,
+    marginTop: 20,
     paddingTop: 20,
     paddingBottom: 10,
     // borderWidth: 1
@@ -191,7 +196,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
 
     // Shadow properties for iOS
-    shadowColor: "#000", // Shadow color
+    // Shadow color
     shadowOffset: { width: 0, height: 3 }, // Shadow offset (width, height)
     shadowOpacity: 0.2, // Shadow opacity (0 to 1)
     shadowRadius: 3, // Shadow blur radius

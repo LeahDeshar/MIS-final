@@ -14,7 +14,7 @@ import Feather from "react-native-vector-icons/Feather";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getOneProducts } from "../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppImage from "../components/AppImage";
@@ -90,9 +90,17 @@ const ProductDetails = ({ route }) => {
       navigation.navigate("Cart");
     }
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
     <BottomSheetModalProvider>
-      <View style={styles.outerContainer}>
+      <View
+        style={[
+          styles.outerContainer,
+          {
+            backgroundColor: theme === "dark" ? "#000" : "#fff",
+          },
+        ]}
+      >
         <View>
           <View>
             {proDetails &&
@@ -109,8 +117,24 @@ const ProductDetails = ({ route }) => {
               )}
             {/* <Image source={proDetails?.image} style={styles.image} /> */}
             <View style={styles.rateCategory}>
-              <Text style={styles.category}>{proDetails?.category?.name}</Text>
-              <Text style={styles.star}>
+              <Text
+                style={[
+                  {
+                    color: theme === "dark" ? "#fff" : "#000",
+                  },
+                  styles.category,
+                ]}
+              >
+                {proDetails?.category?.name}
+              </Text>
+              <Text
+                style={[
+                  styles.star,
+                  {
+                    color: theme === "dark" ? "#fff" : "#000",
+                  },
+                ]}
+              >
                 <Entypo name="star" style={styles.starName} />
                 {proDetails?.rating} (0 reviews)
               </Text>
@@ -119,14 +143,30 @@ const ProductDetails = ({ route }) => {
           <View>
             <ScrollView>
               <View style={styles.productContainer}>
-                <Text style={styles.title}>{proDetails?.name}</Text>
+                <Text
+                  style={[
+                    styles.title,
+                    {
+                      color: theme === "dark" ? "#fff" : "#000",
+                    },
+                  ]}
+                >
+                  {proDetails?.name}
+                </Text>
                 <View
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={styles.priceTitle}>
+                  <Text
+                    style={[
+                      styles.priceTitle,
+                      {
+                        color: theme === "dark" ? "#fff" : "#000",
+                      },
+                    ]}
+                  >
                     Rs. {proDetails?.price}/ per kg
                   </Text>
                   <View style={styles.btnContainer}>
@@ -148,27 +188,69 @@ const ProductDetails = ({ route }) => {
                 <View style={styles.btnContainer}>
                   <TouchableOpacity
                     onPress={handleAddTocart}
-                    style={styles.btnCart}
+                    style={[
+                      styles.btnCart,
+                      {
+                        backgroundColor: theme === "dark" ? "#fff" : "#000",
+                      },
+                    ]}
                     disabled={proDetails?.quantity < 0}
                   >
-                    <Text style={styles.btnCartText}>
+                    <Text
+                      style={[
+                        styles.btnCartText,
+                        {
+                          color: theme === "dark" ? "#000" : "#fff",
+                        },
+                      ]}
+                    >
                       {proDetails?.quantity > 0
                         ? "ADD TO CART"
                         : "OUT OF STOCK"}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={styles.btnCart}
+                    style={[
+                      styles.btnCart,
+                      {
+                        backgroundColor: theme === "dark" ? "#fff" : "#000",
+                      },
+                    ]}
                     disabled={proDetails?.quantity < 0}
                   >
-                    <Text style={styles.btnCartText}>
+                    <Text
+                      style={[
+                        styles.btnCartText,
+                        {
+                          color: theme === "dark" ? "#000" : "#fff",
+                        },
+                      ]}
+                    >
                       {proDetails?.quantity > 0 ? "BUY NOW" : "OUT OF STOCK"}
                     </Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.descContainer}>
-                  <Text style={styles.descTitle}>Description </Text>
-                  <Text style={styles.desc}>{proDetails?.description}</Text>
+                  <Text
+                    style={[
+                      styles.descTitle,
+                      {
+                        color: theme === "dark" ? "#fff" : "#000",
+                      },
+                    ]}
+                  >
+                    Description{" "}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.desc,
+                      {
+                        color: theme === "dark" ? "#fff" : "#000",
+                      },
+                    ]}
+                  >
+                    {proDetails?.description}
+                  </Text>
                 </View>
                 <View style={styles.farmerContainer}>
                   {proDetails?.farmer &&
@@ -189,25 +271,72 @@ const ProductDetails = ({ route }) => {
                     />
                   )}
                   <View style={styles.farmerDesc}>
-                    <Text style={styles.farmeName}>
+                    <Text
+                      style={[
+                        styles.farmeName,
+                        {
+                          color: theme === "dark" ? "#fff" : "#000",
+                        },
+                      ]}
+                    >
                       {proDetails?.farmer?.name}
                     </Text>
                     <Text>
-                      <Entypo name="location-pin" style={styles.locationPin} />
+                      <Entypo
+                        name="location-pin"
+                        style={[
+                          styles.locationPin,
+                          {
+                            color: theme === "dark" ? "#fff" : "#000",
+                          },
+                        ]}
+                      />
                       {proDetails?.farmer?.address}
                     </Text>
                   </View>
                   <View style={styles.contactContainer}>
-                    <Feather name="message-square" style={styles.contact} />
-                    <FontAwesome name="phone" style={styles.contact} />
+                    <Feather
+                      name="message-square"
+                      style={[
+                        styles.contact,
+                        {
+                          color: theme === "dark" ? "#fff" : "#000",
+                        },
+                      ]}
+                    />
+                    <FontAwesome
+                      name="phone"
+                      style={[
+                        styles.contact,
+                        {
+                          color: theme === "dark" ? "#fff" : "#000",
+                        },
+                      ]}
+                    />
                   </View>
                 </View>
 
                 <View style={{ marginVertical: 18 }}>
-                  <Text style={styles.descTitle}>Leave a review</Text>
+                  <Text
+                    style={[
+                      styles.descTitle,
+                      {
+                        color: theme === "dark" ? "#fff" : "#000",
+                      },
+                    ]}
+                  >
+                    Leave a review
+                  </Text>
 
                   <TouchableOpacity onPress={handlePresentModalPress}>
-                    <Text style={{ marginTop: 10, fontSize: 15 }}>
+                    <Text
+                      style={{
+                        marginTop: 10,
+                        fontSize: 15,
+
+                        color: theme === "dark" ? "#fff" : "#000",
+                      }}
+                    >
                       {proDetails?.reviews?.length} Reviews -
                       <Entypo
                         name="star"
@@ -221,7 +350,14 @@ const ProductDetails = ({ route }) => {
                 </View>
               </View>
               <View style={styles.relatedProduct}>
-                <Text style={styles.descTitle}>Related Product</Text>
+                <Text
+                  style={[
+                    styles.descTitle,
+                    { color: theme === "dark" ? "#fff" : "#000" },
+                  ]}
+                >
+                  Related Product
+                </Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {allproducts
                     ?.map((item) => (

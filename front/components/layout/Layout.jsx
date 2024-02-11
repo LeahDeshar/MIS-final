@@ -4,11 +4,18 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme === "dark" ? "#000" : "#fff" },
+      ]}
+    >
+      {/* <StatusBar barStyle="light-content" /> */}
       <ScrollView>
         <View>{children}</View>
       </ScrollView>
@@ -44,7 +51,6 @@ const styles = StyleSheet.create({
     top: 80,
   },
   container: {
-    backgroundColor: "white",
     flex: 1,
   },
 });

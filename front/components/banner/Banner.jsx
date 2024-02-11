@@ -10,17 +10,15 @@ import React from "react";
 import Carousel, { PaginationLight } from "react-native-x-carousel";
 import { BannerData } from "../../data/BannerData";
 import AppImage from "../AppImage";
+import { useSelector } from "react-redux";
 const { width } = Dimensions.get("window");
 
 const Banner = () => {
+  const theme = useSelector((state) => state.products.theme);
   const renderItem = (data) => (
     <View key={data.coverImageUri} style={styles.cardContainer}>
       <Pressable onPress={() => alert(data._id)}>
         <View style={styles.cardWrapper}>
-          {/* <AppImage */}
-
-          {/* <Image style={styles.card} source={{ uri: data.coverImageUri }} /> */}
-
           <AppImage
             source={{ uri: data.coverImageUri }}
             alt="Example Image"
@@ -42,7 +40,12 @@ const Banner = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { borderColor: theme === "dark" ? "#ADBC9F" : "#102c00" },
+      ]}
+    >
       <Carousel
         pagination={PaginationLight}
         renderItem={renderItem}
@@ -57,13 +60,10 @@ const Banner = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 20,
-    borderRadius: 25,
-    borderWidth: 0.7,
-    borderColor: "#0000004d",
+
     paddingHorizontal: 10,
   },
   cardContainer: {
@@ -79,6 +79,8 @@ const styles = StyleSheet.create({
     width: width * 0.89,
     height: width * 0.43,
     borderRadius: 25,
+    backgroundColor: "#fff",
+    marginHorizontal: 10,
   },
   cornerLabel: {
     position: "absolute",

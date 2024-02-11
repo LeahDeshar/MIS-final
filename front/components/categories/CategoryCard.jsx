@@ -3,7 +3,7 @@ import React from "react";
 import Categories from "./Categories";
 import Categoriesii from "./Categoriesii";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllCategory } from "../../redux/categoryAction";
 import { fetchDataFromStorage } from "../auth/localstorage";
 
@@ -15,12 +15,27 @@ const CategoryCard = () => {
     dispatch(getAllCategory());
     fetchDataFromStorage();
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View>
       <View style={styles.cateContainer}>
-        <Text style={styles.cateTitle}>Categories</Text>
+        <Text
+          style={[
+            styles.cateTitle,
+            { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+          ]}
+        >
+          Categories
+        </Text>
         <TouchableOpacity style={styles.seeBtn} onPress={seeAllHandler}>
-          <Text style={styles.seeall}>See All</Text>
+          <Text
+            style={[
+              styles.seeall,
+              { color: theme === "dark" ? "#ADBC9F" : "#343434" },
+            ]}
+          >
+            See All
+          </Text>
         </TouchableOpacity>
       </View>
       <Categoriesii />

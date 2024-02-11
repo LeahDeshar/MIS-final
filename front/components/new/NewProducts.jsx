@@ -12,7 +12,7 @@ import newProducts from "../../data/NewProductsData";
 import { useNavigation } from "@react-navigation/native";
 import { getAllProducts, getOneProducts } from "../../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const NewProducts = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -36,11 +36,18 @@ const NewProducts = () => {
     };
     fetchData();
   }, []);
-
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View>
       <View style={styles.featureContainer}>
-        <Text style={styles.featureTitle}>New Products</Text>
+        <Text
+          style={[
+            styles.featureTitle,
+            { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+          ]}
+        >
+          New Products
+        </Text>
         <TouchableOpacity style={styles.searchBtn} onPress={seeAllHandler}>
           <Text style={styles.seeall}>See All</Text>
         </TouchableOpacity>

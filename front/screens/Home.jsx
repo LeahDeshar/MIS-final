@@ -41,7 +41,7 @@ const Home = () => {
             <Featured />
             <Topsell />
             <Recommend />
-            <Tail />
+            {/* <Tail /> */}
           </>
         ) : (
           <>
