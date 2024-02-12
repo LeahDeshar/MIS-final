@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import LottieView from "lottie-react-native";
 
 const SplashScreens = ({ navigation }) => {
@@ -12,25 +12,31 @@ const SplashScreens = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <LottieView
-        source={require("../assets/sparkle.json")} // Adjust the path to your animation JSON file
-        autoPlay
-        loop={false}
-      /> */}
       <LottieView
-        source={require("../assets/splash.json")}
+        source={require("../assets/splash3.json")}
         style={{
-          height: 360,
-          width: 250,
+          height: 160,
+          width: 350,
           alignSelf: "center",
-          marginTop: 60,
-          right: 40,
+          //   marginTop: 60,
+          // top: 60,
           justifyContent: "center",
+          top: 180,
         }}
         autoPlay
-        loop={false}
+        loop={true}
         speed={0.7}
       />
+      <Text
+        style={{
+          fontSize: 40,
+          fontWeight: "600",
+          textAlign: "center",
+          fontFamily: "Helvetica",
+        }}
+      >
+        CultiVista
+      </Text>
     </View>
   );
 };
@@ -38,8 +44,8 @@ const SplashScreens = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     backgroundColor: "#fff", // Adjust as needed
   },
 });

@@ -65,13 +65,13 @@ const App = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="splash"
               component={SplashScreens}
               options={{
                 headerShown: false,
               }}
-            />
+            /> */}
             <Stack.Screen
               name="home"
               component={Home}
