@@ -49,6 +49,7 @@ import { AppRegistry } from "react-native";
 
 import { LogBox } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SplashScreens from "./screens/SplashScreens";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
 ]);
@@ -64,6 +65,13 @@ const App = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen
+              name="splash"
+              component={SplashScreens}
+              options={{
+                headerShown: false,
+              }}
+            />
             <Stack.Screen
               name="home"
               component={Home}

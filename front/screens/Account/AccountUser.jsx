@@ -43,12 +43,22 @@ const AccountUser = ({ navigation }) => {
 
     fetchData();
   }, [dispatch]);
+  let auth = useSelector((state) => state.products.auth);
+  const logout = async () => {
+    auth = null;
+    await AsyncStorage.removeItem("@user");
+    await AsyncStorage.removeItem("@auth");
+    await AsyncStorage.removeItem("@profile");
+    await AsyncStorage.removeItem("@cart");
 
+    console.log("Logged out", auth);
+    navigation.navigate("login");
+  };
   return (
     <View style={styles.outerContainer}>
       <View style={styles.imageContainer}>
         <ImageBackground
-          source={{ uri: profile?.profilePic.url }}
+          source={{ uri: profile?.profilePic?.url }}
           style={styles.image}
         />
         <View style={styles.overlay}></View>
@@ -195,10 +205,7 @@ const AccountUser = ({ navigation }) => {
             Technical Support{" "}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate("notification")}
-        >
+        <TouchableOpacity style={styles.btn} onPress={logout}>
           <AntDesign
             name="logout"
             style={theme === "dark" ? styles.darkbtnText : styles.btnText}

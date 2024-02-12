@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -18,17 +25,40 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
   const [isBookmarked, setBookmark] = useState(false);
   const dispatch = useDispatch();
 
+  let token;
+  useEffect(() => {
+    const fetchToken = async () => {
+      token = await AsyncStorage.getItem("@auth");
+    };
+    fetchToken();
+  }, []);
   const handleBookmark = () => {
-    setBookmark(!isBookmarked);
-    if (!isBookmarked) {
-      console.log("add to cart");
-      dispatch(addProductToCart({ product }));
-      dispatch(toggleBookmark({ product }));
-      navigation.navigate("Cart");
+    if (token) {
+      setBookmark(!isBookmarked);
+      if (!isBookmarked) {
+        console.log("add to cart");
+        dispatch(addProductToCart({ product }));
+        dispatch(toggleBookmark({ product }));
+        navigation.navigate("Cart");
+      } else {
+        console.log("remove");
+        dispatch(removeProductFromCart({ product }));
+        dispatch(toggleBookmark({ product }));
+      }
     } else {
-      console.log("remove");
-      dispatch(removeProductFromCart({ product }));
-      dispatch(toggleBookmark({ product }));
+      Alert.alert(
+        "Please Login",
+        "You need to login to add to cart",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => navigation.navigate("login") },
+        ]
+        // { cancelable: false }
+      );
     }
   };
 
@@ -106,8 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     borderRadius: 20,
-    borderWidth: 1,
-    // borderColor: "#fff",
+
     shadowColor: "black",
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.1,

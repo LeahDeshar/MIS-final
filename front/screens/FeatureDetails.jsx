@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import Footer from "../components/layout/Footer";
@@ -28,9 +29,28 @@ const ProductDetails = ({ route }) => {
   const [qty, setQty] = useState(1);
   const [newComment, setNewComment] = useState("");
 
+  let token;
+  useEffect(() => {
+    const fetchToken = async () => {
+      token = await AsyncStorage.getItem("@auth");
+    };
+    fetchToken();
+  }, []);
+
   const BottomRef = useRef(null);
   const handlePresentModalPress = () => {
-    BottomRef.current.present();
+    if (token) {
+      BottomRef.current.present();
+    } else {
+      Alert.alert("Please Login", "You need to login to leave a review", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => navigation.navigate("login") },
+      ]);
+    }
   };
   const handleCloseModalPress = () => {
     BottomRef.current.close();
@@ -49,7 +69,6 @@ const ProductDetails = ({ route }) => {
 
   const { params } = route;
 
-  // console.log("params", params);
   const dispatch = useDispatch();
   const [allproducts, setAllProducts] = useState([]);
   const [totalProducts, setTotalProducts] = useState([]);
@@ -74,20 +93,41 @@ const ProductDetails = ({ route }) => {
     };
     fetchData();
   }, []);
-  // console.log(allproducts);
 
   const product = totalProducts?.find(
     (item) => item._id === params?.product?._id
   );
 
-  const ids = totalProducts.map((item) => item._id);
-  console.log(ids, params?.product?._id, "ids");
-  console.log(params?.product, product, "product");
+  const handleBuyNow = () => {
+    if (token) {
+      navigation.navigate("Confirmation");
+    } else {
+      Alert.alert("Please Login", "You need to login to buy", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => navigation.navigate("login") },
+      ]);
+    }
+  };
   const handleAddTocart = () => {
-    if (product) {
-      dispatch(addProductToCart({ product }));
-      dispatch(toggleBookmark({ product }));
-      navigation.navigate("Cart");
+    if (token) {
+      if (product) {
+        dispatch(addProductToCart({ product }));
+        dispatch(toggleBookmark({ product }));
+        navigation.navigate("Cart");
+      }
+    } else {
+      Alert.alert("Please Login", "You need to login to add to cart", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => navigation.navigate("login") },
+      ]);
     }
   };
   const theme = useSelector((state) => state.products.theme);
@@ -176,7 +216,16 @@ const ProductDetails = ({ route }) => {
                     >
                       <Text style={styles.btnQtyTxt}>-</Text>
                     </TouchableOpacity>
-                    <Text style={styles.qty}>{proDetails?.quantity}</Text>
+                    <Text
+                      style={[
+                        styles.qty,
+                        {
+                          color: theme === "dark" ? "#fff" : "#000",
+                        },
+                      ]}
+                    >
+                      {proDetails?.quantity}
+                    </Text>
                     <TouchableOpacity
                       style={styles.btnQty}
                       onPress={handleAddQty}
@@ -210,6 +259,7 @@ const ProductDetails = ({ route }) => {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
+                    onPress={handleBuyNow}
                     style={[
                       styles.btnCart,
                       {
@@ -281,7 +331,11 @@ const ProductDetails = ({ route }) => {
                     >
                       {proDetails?.farmer?.name}
                     </Text>
-                    <Text>
+                    <Text
+                      style={{
+                        color: theme === "dark" ? "#fff" : "#000",
+                      }}
+                    >
                       <Entypo
                         name="location-pin"
                         style={[

@@ -20,30 +20,14 @@ const Notifications = () => {
   }, [dispatch]);
 
   const navigation = useNavigation();
-  return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      {/* <View style={styles.container}>
-        <Text>Notification</Text>
-      </View> */}
-
-      <Button
-        title="register"
-        onPress={() => navigation.navigate("register")}
-      />
-      <DefaultProfileImage name={"Test User"} />
-      <ImageUpload />
-      <View style={styles.footerContainer}>
-        <Footer />
-      </View>
-    </View>
-  );
+  return <Layout></Layout>;
 };
 
 export default Notifications;
 
 const styles = StyleSheet.create({
   container: {
-    height: 500,
+    // height: 500,
   },
   footerContainer: {
     bottom: -390,

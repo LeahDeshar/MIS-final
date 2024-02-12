@@ -1,10 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { fetchDataFromStorage } from "../auth/localstorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Footer = () => {
   const route = useRoute();
@@ -20,6 +22,39 @@ const Footer = () => {
     }
   };
   const theme = useSelector((state) => state.products.theme);
+
+  const handleNotification = async () => {
+    // fetchDataFromStorage();
+    token = await AsyncStorage.getItem("@auth");
+    console.log("Token from AsyncStorage:", token);
+
+    if (token) {
+      navigation.navigate("Notification");
+    } else {
+      navigation.navigate("login");
+    }
+  };
+
+  const handleAccount = async () => {
+    // fetchDataFromStorage();
+    token = await AsyncStorage.getItem("@auth");
+
+    if (token) {
+      navigation.navigate("Account");
+    } else {
+      navigation.navigate("login");
+    }
+  };
+  const handleCart = async () => {
+    // fetchDataFromStorage();
+    token = await AsyncStorage.getItem("@auth");
+
+    if (token) {
+      navigation.navigate("Cart");
+    } else {
+      navigation.navigate("login");
+    }
+  };
   return (
     <View
       style={[
@@ -56,7 +91,7 @@ const Footer = () => {
 
       <TouchableOpacity
         style={styles.menuContainer}
-        onPress={() => navigation.navigate("Notification")}
+        onPress={handleNotification}
       >
         <AntDesign
           name="bells"
@@ -89,38 +124,8 @@ const Footer = () => {
         {/* <Text style={styles.iconText}>Post</Text> */}
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.menuContainer}
-        onPress={() => navigation.navigate("Account")}
-      >
-        <AntDesign
-          name="user"
-          style={[
-            styles.icon,
-            {
-              color: theme === "dark" ? "#fff" : "#000",
-            },
-            route.name === "Account" && styles.active,
-          ]}
-        />
-        <Text
-          style={[
-            styles.iconText,
-            {
-              color: theme === "dark" ? "#fff" : "#000",
-            },
-            route.name === "Account" && styles.active,
-          ]}
-        >
-          Account
-        </Text>
-      </TouchableOpacity>
-
       {user === "buyer" ? (
-        <TouchableOpacity
-          style={styles.menuContainer}
-          onPress={() => navigation.navigate("Cart")}
-        >
+        <TouchableOpacity style={styles.menuContainer} onPress={handleCart}>
           <AntDesign
             name="shoppingcart"
             style={[
@@ -171,6 +176,29 @@ const Footer = () => {
           </Text>
         </TouchableOpacity>
       )}
+      <TouchableOpacity style={styles.menuContainer} onPress={handleAccount}>
+        <AntDesign
+          name="user"
+          style={[
+            styles.icon,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "Account" && styles.active,
+          ]}
+        />
+        <Text
+          style={[
+            styles.iconText,
+            {
+              color: theme === "dark" ? "#fff" : "#000",
+            },
+            route.name === "Account" && styles.active,
+          ]}
+        >
+          Account
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
