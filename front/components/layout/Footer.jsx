@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -11,11 +11,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Footer = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const [user, setUser] = useState("");
   // const user = 'seller'
-  const user = "buyer";
+  useEffect(() => {
+    const fetchRole = async () => {
+      const storedRoleString = await AsyncStorage.getItem("@role");
+      const storedRole = JSON.parse(storedRoleString);
+      setUser(storedRole);
+      // console.log("Role from AsyncStorage:", storedRole);
+    };
+    fetchRole();
+  }, []);
 
   const handlePlusButton = () => {
-    if (user === "buyer") {
+    if (user === "customer") {
       navigation.navigate("Forum");
     } else {
       navigation.navigate("CreateProduct");

@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import Layout from "../../components/layout/Layout";
+import { useSelector } from "react-redux";
 
 const ProductListing = () => {
-  const [productName, setProductName] = useState('');
-  const [productDescription, setProductDescription] = useState('');
-  const [productPrice, setProductPrice] = useState('');
-  const [productQuantity, setProductQuantity] = useState('');
-  const [productCategory, setProductCategory] = useState('');
+  const [productName, setProductName] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [productQuantity, setProductQuantity] = useState("");
+  const [productCategory, setProductCategory] = useState("");
 
   const handleAddProduct = () => {
     // Validate input fields before adding the product
-    if (!productName || !productDescription || !productPrice || !productQuantity || !productCategory) {
-      alert('Please fill in all fields.');
+    if (
+      !productName ||
+      !productDescription ||
+      !productPrice ||
+      !productQuantity ||
+      !productCategory
+    ) {
+      alert("Please fill in all fields.");
       return;
     }
 
@@ -29,22 +37,29 @@ const ProductListing = () => {
     // onAddProduct(newProduct);
 
     // Clear input fields after adding the product
-    setProductName('');
-    setProductDescription('');
-    setProductPrice('');
-    setProductQuantity('');
-    setProductCategory('');
+    setProductName("");
+    setProductDescription("");
+    setProductPrice("");
+    setProductQuantity("");
+    setProductCategory("");
   };
-
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add New Product</Text>
+    <Layout style={styles.container}>
+      <Text
+        style={[
+          styles.title,
+          { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+        ]}
+      >
+        Add New Product
+      </Text>
 
       <TextInput
         style={styles.input}
         placeholder="Product Name"
         value={productName}
-        onChangeText={text => setProductName(text)}
+        onChangeText={(text) => setProductName(text)}
       />
 
       <TextInput
@@ -52,7 +67,7 @@ const ProductListing = () => {
         placeholder="Product Description"
         multiline
         value={productDescription}
-        onChangeText={text => setProductDescription(text)}
+        onChangeText={(text) => setProductDescription(text)}
       />
 
       <TextInput
@@ -60,7 +75,7 @@ const ProductListing = () => {
         placeholder="Price"
         keyboardType="numeric"
         value={productPrice}
-        onChangeText={text => setProductPrice(text)}
+        onChangeText={(text) => setProductPrice(text)}
       />
 
       <TextInput
@@ -68,18 +83,18 @@ const ProductListing = () => {
         placeholder="Quantity"
         keyboardType="numeric"
         value={productQuantity}
-        onChangeText={text => setProductQuantity(text)}
+        onChangeText={(text) => setProductQuantity(text)}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Category"
         value={productCategory}
-        onChangeText={text => setProductCategory(text)}
+        onChangeText={(text) => setProductCategory(text)}
       />
 
       <Button title="Add Product" onPress={handleAddProduct} />
-    </View>
+    </Layout>
   );
 };
 
@@ -88,15 +103,21 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: "bold",
+    paddingTop: 30,
+    paddingBottom: 5,
     marginBottom: 16,
+    marginHorizontal: 20,
   },
   input: {
+    marginHorizontal: 20,
+
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 12,
+    borderRadius: 9,
     paddingHorizontal: 8,
   },
 });

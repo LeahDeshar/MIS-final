@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useSelector } from "react-redux";
 
 const Activity = () => {
   const data = {
@@ -15,23 +16,76 @@ const Activity = () => {
   };
 
   const activities = [
-    { label: 'Total Sales', value: data.totalSales, icon: 'attach-money', color: '#3498db' },
-    { label: 'Total Revenue', value: `₹${data.totalRevenue}`, icon: 'monetization-on', color: '#e67e22' },
-    { label: 'Active Orders', value: data.activeOrders, icon: 'shopping-cart', color: '#2ecc71' },
-    { label: 'Total Visitors', value: data.totalVisitors, icon: 'people', color: '#9b59b6' },
-    { label: 'Total Orders', value: data.totalOrders, icon: 'assignment', color: '#e74c3c' },
-    { label: 'Published Items', value: data.totalPublishedItems, icon: 'list', color: '#f39c12' },
-    { label: 'Inactive Items', value: data.totalInactiveItems, icon: 'block', color: '#c0392b' },
-    { label: 'Out of Stock', value: data.outOfStockProducts, icon: 'remove-shopping-cart', color: '#3498db' },
+    {
+      label: "Total Sales",
+      value: data.totalSales,
+      icon: "attach-money",
+      color: "#3498db",
+    },
+    {
+      label: "Total Revenue",
+      value: `₹${data.totalRevenue}`,
+      icon: "monetization-on",
+      color: "#e67e22",
+    },
+    {
+      label: "Active Orders",
+      value: data.activeOrders,
+      icon: "shopping-cart",
+      color: "#2ecc71",
+    },
+    {
+      label: "Total Visitors",
+      value: data.totalVisitors,
+      icon: "people",
+      color: "#9b59b6",
+    },
+    {
+      label: "Total Orders",
+      value: data.totalOrders,
+      icon: "assignment",
+      color: "#e74c3c",
+    },
+    {
+      label: "Published Items",
+      value: data.totalPublishedItems,
+      icon: "list",
+      color: "#f39c12",
+    },
+    {
+      label: "Inactive Items",
+      value: data.totalInactiveItems,
+      icon: "block",
+      color: "#c0392b",
+    },
+    {
+      label: "Out of Stock",
+      value: data.outOfStockProducts,
+      icon: "remove-shopping-cart",
+      color: "#3498db",
+    },
   ];
-
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Activity</Text>
+      <Text
+        style={[
+          styles.title,
+          { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+        ]}
+      >
+        Activity
+      </Text>
 
-      <View style={styles.gridContainer}>
+      <View style={[styles.gridContainer]}>
         {activities.map((activity, index) => (
-          <View key={index} style={styles.activityItem}>
+          <View
+            key={index}
+            style={[
+              styles.activityItem,
+              { backgroundColor: theme === "dark" ? "#f6ffeeb5" : "#102c00" },
+            ]}
+          >
             <Icon name={activity.icon} size={30} color={activity.color} />
             <Text style={styles.activityLabel}>{activity.label}</Text>
             <Text style={styles.activityValue}>{activity.value}</Text>
@@ -48,19 +102,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   activityItem: {
-    width: '48%', // Adjust as needed
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    width: "48%", // Adjust as needed
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1",
     padding: 16,
     marginVertical: 8,
     borderRadius: 8,
@@ -68,14 +122,14 @@ const styles = StyleSheet.create({
   activityLabel: {
     marginTop: 8,
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2c3e50',
+    fontWeight: "bold",
+    color: "#2c3e50",
   },
   activityValue: {
     marginTop: 4,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontWeight: "bold",
+    color: "#000000",
   },
 });
 

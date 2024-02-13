@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchDataFromStorage } from "../../components/auth/localstorage";
 import * as ImagePicker from "expo-image-picker";
 import DefaultProfileImage from "../../components/DefaultProfileImage";
+import Layout from "../../components/layout/Layout";
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const Profile = ({ navigation }) => {
   const [address, setAddress] = useState("");
 
   const [contact, setContact] = useState("");
-
+  const theme = useSelector((state) => state.products.theme);
   const handleUpdate = () => {
     if (!email || !name || !address || !contact) {
       return alert("Please enter your information");
@@ -45,7 +46,7 @@ const Profile = ({ navigation }) => {
       if (profile) {
         setEmail(profile?.email);
         setName(profile?.name);
-        setProfilePic(profile?.profilePic.url);
+        setProfilePic(profile?.profilePic?.url);
         setAddress(profile?.address);
         setContact(profile?.phone);
       }
@@ -89,7 +90,7 @@ const Profile = ({ navigation }) => {
     }
   };
   return (
-    <View style={styles.container}>
+    <Layout style={styles.container}>
       <ScrollView>
         <View style={styles.imageContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSelectImage}>
@@ -98,7 +99,7 @@ const Profile = ({ navigation }) => {
             ) : selectedImage ? (
               <Image source={{ uri: selectedImage }} style={styles.image} />
             ) : (
-              <DefaultProfileImage name={"Test User"} />
+              <DefaultProfileImage name={name} />
             )}
           </TouchableOpacity>
         </View>
@@ -126,12 +127,20 @@ const Profile = ({ navigation }) => {
           placeholder={"Enter Your Contact"}
           autoComplete={"tel"}
         />
-        <TouchableOpacity style={styles.btnUpdate} onPress={handleUpdate}>
+        <TouchableOpacity
+          style={[
+            styles.btnUpdate,
+            {
+              backgroundColor: theme === "dark" ? "#ADBC9F" : "#000",
+            },
+          ]}
+          onPress={handleUpdate}
+        >
           <Text style={styles.btnUpdateText}>Update Profile</Text>
         </TouchableOpacity>
       </ScrollView>
-      <Footer />
-    </View>
+      {/* <Footer /> */}
+    </Layout>
   );
 };
 
@@ -146,6 +155,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 30,
   },
   image: {
     width: 100,

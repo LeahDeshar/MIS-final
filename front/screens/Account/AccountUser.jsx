@@ -21,6 +21,7 @@ import { getUserData } from "../../redux/userAction";
 import { fetchDataFromStorage } from "../../components/auth/localstorage";
 import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../../redux/productReducer";
+import AppImage from "../../components/AppImage";
 
 const AccountUser = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -57,6 +58,12 @@ const AccountUser = ({ navigation }) => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.imageContainer}>
+        {/* <AppImage
+          source={{ uri: profile?.profilePic?.url }}
+          style={styles.image}
+          alt="Your Alt Text"
+          noCache={false}
+        /> */}
         <ImageBackground
           source={{ uri: profile?.profilePic?.url }}
           style={styles.image}

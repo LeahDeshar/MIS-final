@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { PieChart } from 'react-native-chart-kit';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { PieChart } from "react-native-chart-kit";
+import { useSelector } from "react-redux";
 
 const StockStatus = () => {
   const stockStatus = {
@@ -11,40 +12,46 @@ const StockStatus = () => {
 
   const data = [
     {
-      name: 'In Stock',
+      name: "In Stock",
       population: stockStatus.inStockItems,
-      color: '#272626c2',
-      legendFontColor: '#7F7F7F',
+      color: "#494949c2",
+      legendFontColor: "#ADBC9F",
       legendFontSize: 15,
     },
     {
-      name: 'Out of Stock',
+      name: "Out of Stock",
       population: stockStatus.outOfStockItems,
-      color: '#000000',
-      legendFontColor: '#7F7F7F',
+      color: "#ADBC9F",
+      legendFontColor: "#ADBC9F",
       legendFontSize: 15,
     },
   ];
-
+  const theme = useSelector((state) => state.products.theme);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Stock Status</Text>
+      <Text
+        style={[
+          styles.title,
+          { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+        ]}
+      >
+        Stock Status
+      </Text>
       <View style={styles.pieContainer}>
-      <PieChart
-        data={data}
-        width={300}
-        height={200}
-        chartConfig={{
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ecf0f1',
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        }}
-        accessor="population"
-        backgroundColor="transparent"
-        paddingLeft="15"
-        absolute
-      />
-
+        <PieChart
+          data={data}
+          width={300}
+          height={200}
+          chartConfig={{
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ecf0f1",
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          }}
+          accessor="population"
+          backgroundColor="transparent"
+          paddingLeft="15"
+          absolute
+        />
       </View>
     </View>
   );
@@ -53,14 +60,13 @@ const StockStatus = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-},
-pieContainer:{
-    paddingLeft: 30
-    
+  },
+  pieContainer: {
+    paddingLeft: 30,
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
 });

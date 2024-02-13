@@ -11,6 +11,11 @@ export const fetchDataFromStorage = async () => {
     const storedCategoryString = await AsyncStorage.getItem("@category");
     const storedCategory = JSON.parse(storedCategoryString);
 
+    const storedRoleString = await AsyncStorage.getItem("@role");
+    const storedRole = JSON.parse(storedRoleString);
+
+    console.log("Role from AsyncStorage:", storedRole);
+
     console.log("Token from AsyncStorage:", token);
     console.log("Current User from AsyncStorage:", storedUser);
     console.log("Current UserProfile from AsyncStorage:", storedProfile);

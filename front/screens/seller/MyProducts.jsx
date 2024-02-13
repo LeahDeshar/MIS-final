@@ -1,100 +1,111 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native'
-import React from 'react'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import newProducts from '../../data/NewProductsData'
-import { useNavigation } from '@react-navigation/native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
+import React from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import newProducts from "../../data/NewProductsData";
+import { useNavigation } from "@react-navigation/native";
+import Layout from "../../components/layout/Layout";
 
 const MyProducts = () => {
-  const navigation = useNavigation()
-  const cardUpdateHandler = (product)=>{
-    navigation.navigate('updateMyProduct',{_id: product._id})
-  }
-  const cardPressHandler = (product)=>{
-    navigation.navigate('MyProDet',{_id: product._id})
-  }
+  const navigation = useNavigation();
+  const cardUpdateHandler = (product) => {
+    navigation.navigate("updateMyProduct", { _id: product._id });
+  };
+  const cardPressHandler = (product) => {
+    navigation.navigate("MyProDet", { _id: product._id });
+  };
+
   return (
-    <View style={styles.container}>
+    <Layout style={styles.container}>
       <Text>Filtering and sorting setting</Text>
       <ScrollView>
         <View>
-          { newProducts.map((product)=>
-              (
-                <View style={styles.outerCardContainer}>
-                  <TouchableOpacity style={styles.cardContainer} onPress={()=>cardPressHandler(product)}>
-                    <Image source={product.image} style={styles.imageStyle}/>
-                    <View style={styles.desc}>
-                      <Text style={styles.title}>{product.name}</Text> 
-                      <Text>Rs.{product.price}</Text>
-                      <Text>{product.quantity}. kg</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <View>
-                    <TouchableOpacity style={styles.deleteBtn} >
-                        <MaterialCommunityIcons name='delete' size={20}/>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style={styles.updateBtn} onPress={()=>cardUpdateHandler(product)}>
-                        <MaterialIcons name='edit' size={20}/>
-                    </TouchableOpacity>
-                  </View>
+          {newProducts.map((product) => (
+            <View style={styles.outerCardContainer}>
+              <TouchableOpacity
+                style={styles.cardContainer}
+                onPress={() => cardPressHandler(product)}
+              >
+                <Image source={product.image} style={styles.imageStyle} />
+                <View style={styles.desc}>
+                  <Text style={styles.title}>{product.name}</Text>
+                  <Text>Rs.{product.price}</Text>
+                  <Text>{product.quantity}. kg</Text>
                 </View>
-              
-              ))}
+              </TouchableOpacity>
+              <View>
+                <TouchableOpacity style={styles.deleteBtn}>
+                  <MaterialCommunityIcons name="delete" size={20} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.updateBtn}
+                  onPress={() => cardUpdateHandler(product)}
+                >
+                  <MaterialIcons name="edit" size={20} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
         </View>
       </ScrollView>
-     
-    </View>
-  )
-}
+    </Layout>
+  );
+};
 
-export default MyProducts
+export default MyProducts;
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
-  imageStyle:{
+  imageStyle: {
     width: 85,
     height: 85,
-    resizeMode: 'cover',
-    borderRadius: 5
+    resizeMode: "cover",
+    borderRadius: 5,
   },
-  outerCardContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  outerCardContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginHorizontal: 15,
-    marginVertical: 10
+    marginVertical: 10,
   },
-  cardContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
+  cardContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: 10,
   },
-  deleteBtn:{
+  deleteBtn: {
     borderWidth: 1,
     marginVertical: 5,
     padding: 8,
     borderRadius: 5,
-    borderColor: '#9c9c9cba'
-   },
-  updateBtn:{
-    borderWidth: 1,
-    marginVertical: 5,
-    padding: 8,
-    borderRadius: 5,
-    borderColor: '#9c9c9cba'
+    borderColor: "#9c9c9cba",
   },
-  desc:{
+  updateBtn: {
+    borderWidth: 1,
+    marginVertical: 5,
+    padding: 8,
+    borderRadius: 5,
+    borderColor: "#9c9c9cba",
+  },
+  desc: {
     marginLeft: 10,
-    width: '60%',
-
+    width: "60%",
   },
-  title:{
+  title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 6,
-  }
-})
+  },
+});

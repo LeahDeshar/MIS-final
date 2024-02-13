@@ -27,6 +27,8 @@ export const login = (email, password) => async (dispatch) => {
     await AsyncStorage.setItem("@auth", data?.token);
     const stringifiedCurUser = JSON.stringify(data?.user);
     await AsyncStorage.setItem("@user", stringifiedCurUser);
+    const stringifiedRole = JSON.stringify(data?.user.role);
+    await AsyncStorage.setItem("@role", stringifiedRole);
   } catch (error) {
     dispatch({
       type: "loginFail",

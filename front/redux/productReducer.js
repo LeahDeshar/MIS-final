@@ -44,7 +44,7 @@ const productSlice = createSlice({
     location: "",
     paymentMethod: "",
     shipMethod: "",
-    theme: "light",
+    theme: "dark",
   },
   reducers: {
     loadCart: (state, action) => {

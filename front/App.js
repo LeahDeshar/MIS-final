@@ -313,6 +313,9 @@ const App = () => {
               component={ProductListing}
               options={{
                 title: "Add New",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
               }}
             />
 
@@ -320,6 +323,9 @@ const App = () => {
               name="InOrders"
               component={OrderManagement}
               options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
                 title: "Order Management",
               }}
             />
@@ -335,6 +341,9 @@ const App = () => {
               name="MyProducts"
               component={MyProducts}
               options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
                 title: "My Product List",
               }}
             />
@@ -346,6 +355,9 @@ const App = () => {
               component={UpdateMyProduct}
               options={{
                 title: "Update Product",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
                 // headerLeft: () => <Text style={{color: 'blue', fontSize: 20, marginLeft: 10}}>Cancel</Text>,
               }}
             />

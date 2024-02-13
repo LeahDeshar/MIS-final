@@ -2,8 +2,10 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import InputBox from "./InputBox";
 import { register } from "../../redux/userAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useReduxStateHook } from "../../redux/customHook";
+import Dropdown from "../Dropdown";
+import Screen from "../Screen";
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -11,8 +13,9 @@ const Register = ({ navigation }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
-  const dispatch = useDispatch();
+  const [role, setRole] = useState("user");
 
+  const dispatch = useDispatch();
   const handleRegister = () => {
     if (!email || !password || !name || !address || !contact) {
       return alert("Please enter your information");
@@ -23,15 +26,36 @@ const Register = ({ navigation }) => {
       name,
       address,
       phone: contact,
+      role,
     };
     dispatch(register(formData));
-    // navigation.navigate("login");
+  };
+  const getRole = (role) => {
+    setRole(role);
   };
   const loading = useReduxStateHook(navigation, "login");
-  return (
-    <View style={styles.container}>
-      {/* <Image source={require("../../assets/login.png")} style={styles.image} /> */}
+  const theme = useSelector((state) => state.products.theme);
 
+  return (
+    <Screen
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme === "dark" ? "#141414" : "#fff",
+        },
+      ]}
+    >
+      <Text
+        style={{
+          color: theme === "dark" ? "#ADBC9F" : "#000",
+          fontSize: 25,
+          marginLeft: 45,
+          marginVertical: 10,
+          // textAlign: "center",
+        }}
+      >
+        CREATE ACCOUNT
+      </Text>
       <InputBox
         placeholder={"Enter Your Name"}
         autoComplete={"name"}
@@ -51,6 +75,7 @@ const Register = ({ navigation }) => {
         secureTextEntry={true}
         value={password}
         setValue={setPassword}
+        icon={"eye"}
       />
 
       <InputBox
@@ -66,12 +91,35 @@ const Register = ({ navigation }) => {
         setValue={setContact}
         autoComplete={"tel"}
       />
-
+      <View>
+        <Dropdown getRole={getRole} />
+      </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.loginBtn} onPress={handleRegister}>
-          <Text style={styles.loginBtnText}>Register</Text>
+        <TouchableOpacity
+          style={[
+            styles.loginBtn,
+            {
+              backgroundColor: theme === "dark" ? "#ADBC9F" : "#000",
+            },
+          ]}
+          onPress={handleRegister}
+        >
+          <Text
+            style={[
+              styles.loginBtnText,
+              {
+                color: theme === "dark" ? "#000000" : "#fff",
+              },
+            ]}
+          >
+            Register
+          </Text>
         </TouchableOpacity>
-        <Text>
+        <Text
+          style={{
+            color: theme === "dark" ? "white" : "#000",
+          }}
+        >
           Already Have Account?{" "}
           <Text
             onPress={() => navigation.navigate("login")}
@@ -81,7 +129,7 @@ const Register = ({ navigation }) => {
           </Text>
         </Text>
       </View>
-    </View>
+    </Screen>
   );
 };
 
@@ -100,6 +148,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     backgroundColor: "#000",
+    // backgroundColor: "#344029",
     width: "80%",
     justifyContent: "center",
     height: 40,
@@ -119,6 +168,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   link: {
-    color: "red",
+    color: "#ADBC9F",
   },
 });

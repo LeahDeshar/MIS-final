@@ -11,7 +11,7 @@ import InputBox from "./InputBox";
 import { useNavigation } from "@react-navigation/native";
 import Screen from "../Screen";
 import { login } from "../../redux/userAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useReduxStateHook } from "../../redux/customHook";
 
 const Login = () => {
@@ -26,8 +26,16 @@ const Login = () => {
     }
     dispatch(login(email, password));
   };
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <Screen style={styles.container}>
+    <Screen
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme === "dark" ? "#141414" : "#fff",
+        },
+      ]}
+    >
       <View>
         {loading && <Text>loading ...</Text>}
 
@@ -46,10 +54,22 @@ const Login = () => {
         />
 
         <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+          <TouchableOpacity
+            style={[
+              styles.loginBtn,
+              {
+                backgroundColor: theme === "dark" ? "#ADBC9F" : "#000",
+              },
+            ]}
+            onPress={handleLogin}
+          >
             <Text style={styles.loginBtnText}>Login</Text>
           </TouchableOpacity>
-          <Text>
+          <Text
+            style={{
+              color: theme === "dark" ? "white" : "#000",
+            }}
+          >
             Don't Have Account?{" "}
             <Text
               onPress={() => navigation.navigate("register")}
@@ -98,6 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   link: {
-    color: "red",
+    color: "#ADBC9F",
   },
 });

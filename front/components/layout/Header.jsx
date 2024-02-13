@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Feather from "react-native-vector-icons/Feather";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -16,13 +16,23 @@ import { useNavigation } from "@react-navigation/native";
 import CategoryCard from "../categories/CategoryCard";
 import LocationPickerModal from "../LocationPickerModal";
 import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import Categories from '../category/Categories';
 
 const Header = () => {
   const [search, setSearch] = useState("");
   const navigation = useNavigation();
-  // const user = "seller"
-  const user = "buyer";
+  const [user, setUser] = useState("");
+  // const user = 'seller'
+  useEffect(() => {
+    const fetchRole = async () => {
+      const storedRoleString = await AsyncStorage.getItem("@role");
+      const storedRole = JSON.parse(storedRoleString);
+      setUser(storedRole);
+      // console.log("Role from AsyncStorage:", storedRole);
+    };
+    fetchRole();
+  }, []);
 
   const searchHandler = () => {
     console.log(search);
@@ -80,7 +90,7 @@ const Header = () => {
           </Text>
         </View>
         <View>
-          {user === "buyer" ? (
+          {user === "customer" ? (
             <TouchableOpacity style={styles.slideBtn} onPress={slideHandler}>
               <FontAwesome
                 name="sliders"
@@ -97,7 +107,10 @@ const Header = () => {
             >
               <MaterialCommunityIcons
                 name="food-apple"
-                style={styles.slideBtn}
+                style={[
+                  styles.slideBtn,
+                  { color: theme === "dark" ? "#fff" : "#000" },
+                ]}
               />
             </TouchableOpacity>
           )}

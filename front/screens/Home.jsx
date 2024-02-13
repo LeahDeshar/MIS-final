@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/layout/Layout";
 import Header from "../components/layout/Header";
 import Banner from "../components/banner/Banner";
@@ -16,6 +16,7 @@ import DashBoard from "../components/seller/DashBoard";
 import { fetchDataFromStorage } from "../components/auth/localstorage";
 import { LogBox } from "react-native";
 import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
   "Warning: Encountered two children with the same key",
@@ -24,8 +25,19 @@ LogBox.ignoreLogs([
   "Error fetching user data: [AxiosError: Network Error]",
 ]);
 const Home = () => {
+  const [user, setUser] = useState("");
   // const user = 'seller'
-  const user = "buyer";
+  useEffect(() => {
+    const fetchRole = async () => {
+      const storedRoleString = await AsyncStorage.getItem("@role");
+      const storedRole = JSON.parse(storedRoleString);
+      setUser(storedRole);
+      // console.log("Role from AsyncStorage:", storedRole);
+    };
+    fetchRole();
+  }, []);
+
+  // const user = "buyer";
   const theme = useSelector((state) => state.products.theme);
   fetchDataFromStorage();
 
@@ -33,7 +45,7 @@ const Home = () => {
     <View style={theme === "dark" ? styles.darkcontainer : styles.container}>
       <Header />
       <Layout>
-        {user === "buyer" ? (
+        {user === "customer" ? (
           <>
             <CategoryCard />
             <NewProducts />
