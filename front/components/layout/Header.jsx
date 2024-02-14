@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Feather from "react-native-vector-icons/Feather";
@@ -15,14 +16,17 @@ import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import CategoryCard from "../categories/CategoryCard";
 import LocationPickerModal from "../LocationPickerModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getMyProducts } from "../../redux/productAction";
 // import Categories from '../category/Categories';
 
 const Header = () => {
   const [search, setSearch] = useState("");
   const navigation = useNavigation();
   const [user, setUser] = useState("");
+  const role = useSelector((state) => state.user.role);
+  console.log("role", role);
   // const user = 'seller'
   useEffect(() => {
     const fetchRole = async () => {
@@ -32,7 +36,7 @@ const Header = () => {
       // console.log("Role from AsyncStorage:", storedRole);
     };
     fetchRole();
-  }, []);
+  }, [user]);
 
   const searchHandler = () => {
     console.log(search);
@@ -44,8 +48,23 @@ const Header = () => {
   const slideHandler = () => {
     navigation.navigate("Search Filter");
   };
+  const dispatch = useDispatch();
+  // set the loading state
+  const [loading, setLoading] = useState(false);
+
   const productListingHandler = () => {
-    navigation.navigate("MyProducts");
+    setLoading(true);
+    dispatch(getMyProducts())
+      .then(() => {
+        setLoading(false);
+
+        navigation.navigate("MyProducts");
+      })
+      .catch((error) => {
+        setLoading(false);
+
+        console.log(error);
+      });
   };
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -67,6 +86,11 @@ const Header = () => {
     >
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
 
+      {loading && (
+        <View style={{ position: "absolute", left: 200, top: 70 }}>
+          <ActivityIndicator color={"#2ecc71"} size="large" />
+        </View>
+      )}
       <View style={styles.topContainer}>
         <View>
           <TouchableOpacity style={[styles.menuBtn]} onPress={searchHandler}>
@@ -90,10 +114,13 @@ const Header = () => {
           </Text>
         </View>
         <View>
-          {user === "customer" ? (
-            <TouchableOpacity style={styles.slideBtn} onPress={slideHandler}>
-              <FontAwesome
-                name="sliders"
+          {user === "farmer" || role === "farmer" ? (
+            <TouchableOpacity
+              style={styles.slideBtn}
+              onPress={productListingHandler}
+            >
+              <MaterialCommunityIcons
+                name="food-apple"
                 style={[
                   styles.slideBtn,
                   { color: theme === "dark" ? "#fff" : "#000" },
@@ -101,12 +128,9 @@ const Header = () => {
               />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              style={styles.slideBtn}
-              onPress={productListingHandler}
-            >
-              <MaterialCommunityIcons
-                name="food-apple"
+            <TouchableOpacity style={styles.slideBtn} onPress={slideHandler}>
+              <FontAwesome
+                name="sliders"
                 style={[
                   styles.slideBtn,
                   { color: theme === "dark" ? "#fff" : "#000" },

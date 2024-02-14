@@ -21,6 +21,7 @@ const NewProducts = () => {
   };
 
   const [allproducts, setAllProducts] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch(getAllProducts());
@@ -31,8 +32,15 @@ const NewProducts = () => {
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       const newestProducts = storedProducts.slice(0, 6);
+      console.log(storedProducts);
 
       setAllProducts(newestProducts);
+      console.log(
+        "allpr",
+        allproducts
+          .filter((item) => item && item.images && item.images.url) // Filter out undefined items
+          .map((item) => item.images.url)
+      );
     };
     fetchData();
   }, []);
@@ -49,7 +57,14 @@ const NewProducts = () => {
           New Products
         </Text>
         <TouchableOpacity style={styles.searchBtn} onPress={seeAllHandler}>
-          <Text style={styles.seeall}>See All</Text>
+          <Text
+            style={[
+              styles.seeall,
+              { color: theme === "dark" ? "#ADBC9F" : "#102c00" },
+            ]}
+          >
+            See All
+          </Text>
         </TouchableOpacity>
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

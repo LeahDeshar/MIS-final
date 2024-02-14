@@ -3,6 +3,7 @@ import {
   createproductController,
   deleteImageProductController,
   deleteProductController,
+  getAllFromSpecFarmerProductController,
   getAllProductController,
   getOneProductController,
   getTopProductController,
@@ -20,19 +21,28 @@ router.get("/getAll", getAllProductController);
 router.get("/getTop", getTopProductController);
 
 router.get("/getOne/:id", getOneProductController);
+
+// for famer
+router.get(
+  "/getAllProduct",
+  isAuth,
+  isFarmer,
+  getAllFromSpecFarmerProductController
+);
+
 router.post("/create", isAuth, isFarmer, singleUpload, createproductController);
 // update the product only
-router.put("/update/:id", isAuth, isAdmin, updateProductController);
+router.put("/update/:id", isAuth, isFarmer, updateProductController);
 // update the product images
 router.put(
   "/updateImage/:id",
   isAuth,
-  isAdmin,
+  isFarmer,
   singleUpload,
   updateImageProductController
 );
 
-router.delete("/delete/:id", isAuth, isAdmin, deleteProductController);
+router.delete("/delete/:id", isAuth, isFarmer, deleteProductController);
 router.delete(
   "/deleteImage/:id",
   isAuth,

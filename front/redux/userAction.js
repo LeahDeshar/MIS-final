@@ -19,7 +19,7 @@ export const login = (email, password) => async (dispatch) => {
         },
       }
     );
-    console.log(data);
+    // console.log(data);
     dispatch({
       type: "loginSuccess",
       payload: data,
@@ -165,7 +165,7 @@ export const UpdateUserData =
 
 export const UpdateUserProfileImage = (formData) => async (dispatch) => {
   try {
-    console.log("update profile image", { formData });
+    console.log("update profile image", formData);
 
     dispatch({
       type: "updateProfilePictureRequest",

@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import InputBox from "./InputBox";
 import { useNavigation } from "@react-navigation/native";
 import Screen from "../Screen";
-import { login } from "../../redux/userAction";
+import { getUserData, login } from "../../redux/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useReduxStateHook } from "../../redux/customHook";
 
@@ -25,6 +25,7 @@ const Login = () => {
       return alert("Please enter your information");
     }
     dispatch(login(email, password));
+    // dispatch(getUserData());
   };
   const theme = useSelector((state) => state.products.theme);
   return (

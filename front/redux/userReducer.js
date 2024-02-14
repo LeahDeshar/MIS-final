@@ -1,7 +1,15 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 export const userReducer = createReducer(
-  { token: null, profile: null, error: null },
+  {
+    token: null,
+    profile: null,
+    error: null,
+    role: null,
+    msg: null,
+    loading: false,
+    isAuth: false,
+  },
   (builder) => {
     // LOGIN CASE
     builder.addCase("loginRequest", (state, action) => {
@@ -13,6 +21,7 @@ export const userReducer = createReducer(
       console.log("reducer", state.msg);
       state.isAuth = true;
       state.token = action.payload.token;
+      state.role = action.payload.user.role;
     });
     builder.addCase("loginFail", (state, action) => {
       state.isAuth = false;

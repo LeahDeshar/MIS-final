@@ -5,7 +5,7 @@ import Footer from "../../components/layout/Footer";
 import Login from "../../components/auth/Login";
 import Screen from "../../components/Screen";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../redux/userAction";
 import { fetchDataFromStorage } from "../../components/auth/localstorage";
 import ImageUpload from "../../components/ImageUpload";
@@ -13,14 +13,26 @@ import DefaultProfileImage from "../../components/DefaultProfileImage";
 
 const Notifications = () => {
   const dispatch = useDispatch();
-
+  const theme = useSelector((state) => state.products.theme);
   useEffect(() => {
     dispatch(getUserData());
     fetchDataFromStorage();
   }, [dispatch]);
 
   const navigation = useNavigation();
-  return <Layout></Layout>;
+  return (
+    <Layout>
+      <Text
+        style={{
+          color: theme === "dark" ? "#ADBC9F" : "#000",
+          textAlign: "center",
+          paddingTop: 20,
+        }}
+      >
+        No Notification Yet!
+      </Text>
+    </Layout>
+  );
 };
 
 export default Notifications;

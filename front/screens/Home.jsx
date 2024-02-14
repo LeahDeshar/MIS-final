@@ -15,37 +15,56 @@ import Footer from "../components/layout/Footer";
 import DashBoard from "../components/seller/DashBoard";
 import { fetchDataFromStorage } from "../components/auth/localstorage";
 import { LogBox } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Login from "../components/auth/Login";
+import { getUserData } from "../redux/userAction";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
   "Warning: Encountered two children with the same key",
   "Error fetching address",
   "Warning: Each child in a list should have a ",
   "Error fetching user data: [AxiosError: Network Error]",
+  "Error fetching user data: [AxiosError: Request failed with status code 401]",
 ]);
+LogBox.ignoreAllLogs();
 const Home = () => {
   const [user, setUser] = useState("");
   // const user = 'seller'
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchRole = async () => {
+      dispatch(getUserData());
       const storedRoleString = await AsyncStorage.getItem("@role");
       const storedRole = JSON.parse(storedRoleString);
       setUser(storedRole);
       // console.log("Role from AsyncStorage:", storedRole);
     };
     fetchRole();
-  }, []);
+  }, [token, dispatch]);
 
   // const user = "buyer";
   const theme = useSelector((state) => state.products.theme);
   fetchDataFromStorage();
-
+  // const user = 'seller'
+  let token;
+  useEffect(() => {
+    const fetchRole = async () => {
+      token = await AsyncStorage.getItem("@auth");
+    };
+    fetchRole();
+  }, []);
+  const role = useSelector((state) => state.user.role);
+  console.log("role", role);
   return (
     <View style={theme === "dark" ? styles.darkcontainer : styles.container}>
       <Header />
       <Layout>
-        {user === "customer" ? (
+        {user === "farmer" || role === "farmer" ? (
+          <>
+            <DashBoard />
+          </>
+        ) : (
           <>
             <CategoryCard />
             <NewProducts />
@@ -53,11 +72,6 @@ const Home = () => {
             <Featured />
             <Topsell />
             <Recommend />
-            {/* <Tail /> */}
-          </>
-        ) : (
-          <>
-            <DashBoard />
           </>
         )}
       </Layout>
@@ -71,6 +85,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
+    marginBottom: 100,
   },
   darkcontainer: {
     backgroundColor: "#000",

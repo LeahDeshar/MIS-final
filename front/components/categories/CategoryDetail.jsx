@@ -13,6 +13,7 @@ import Footer from "../layout/Footer";
 import { useNavigation } from "@react-navigation/native";
 import Entypo from "react-native-vector-icons/Entypo";
 import Categories from "./Categories";
+import Layout from "../layout/Layout";
 
 const CategoryDetail = ({ route }) => {
   const [category, setCategory] = useState({});
@@ -32,12 +33,12 @@ const CategoryDetail = ({ route }) => {
   }, [params?._id]);
 
   return (
-    <View style={styles.container}>
-      <View>
+    <Layout>
+      <View style={{ marginTop: 20 }}>
         <Categories />
       </View>
       <Text style={styles.categoryTitle}>{category?.name}</Text>
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 130 }}>
         <View style={styles.cardContainer}>
           {filteredProducts.map((item, index) => (
             <TouchableOpacity
@@ -59,11 +60,7 @@ const CategoryDetail = ({ route }) => {
           ))}
         </View>
       </ScrollView>
-
-      <View style={{ top: 60 }}>
-        <Footer />
-      </View>
-    </View>
+    </Layout>
   );
 };
 

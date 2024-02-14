@@ -254,7 +254,7 @@ export const profilePicUpdateController = async (req, res) => {
     const user = await Users.findById(req.user._id);
     // get the photo from client
     const file = getDataUri(req.file);
-
+    console.log(req.file);
     // Check if user has a profile picture already
     if (user.profilePic && user.profilePic.public_id) {
       // Delete previous profile picture from Cloudinary

@@ -6,50 +6,129 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import newProducts from "../../data/NewProductsData";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../../components/layout/Layout";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import AppImage from "../../components/AppImage";
+import { DeleteProduct } from "../../redux/productAction";
 
 const MyProducts = () => {
   const navigation = useNavigation();
+  const [mypro, setMyPro] = useState([]);
+  const dispatch = useDispatch();
   const cardUpdateHandler = (product) => {
     navigation.navigate("updateMyProduct", { _id: product._id });
   };
   const cardPressHandler = (product) => {
     navigation.navigate("MyProDet", { _id: product._id });
   };
+  const handleDeleteBtn = (id) => {
+    console.log(id);
+    dispatch(DeleteProduct(id))
+      .then(() => {
+        storedMyProduct = mypro.filter((product) => product._id !== id);
 
+        AsyncStorage.setItem("@myproducts", JSON.stringify(storedMyProduct));
+
+        setMyPro(storedMyProduct);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    const fetchmyproducts = async () => {
+      const storedmyProString = await AsyncStorage.getItem("@myproducts");
+      const storedMyProduct = JSON.parse(storedmyProString);
+      setMyPro(storedMyProduct);
+      console.log("My Products from AsyncStorage:", storedMyProduct);
+    };
+    fetchmyproducts();
+  }, []);
+  const theme = useSelector((state) => state.products.theme);
   return (
     <Layout style={styles.container}>
       <Text>Filtering and sorting setting</Text>
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 100 }}>
         <View>
-          {newProducts.map((product) => (
+          {mypro?.map((product) => (
             <View style={styles.outerCardContainer}>
               <TouchableOpacity
                 style={styles.cardContainer}
                 onPress={() => cardPressHandler(product)}
               >
-                <Image source={product.image} style={styles.imageStyle} />
+                {/* <Image
+                  source={{ uri: product.images?.url }}
+                  style={styles.imageStyle}
+                /> */}
+                <AppImage
+                  source={{
+                    uri:
+                      product?.images?.url ||
+                      "https://www.hull-o.com/wp-content/uploads/2015/10/Farmer.jpg",
+                  }}
+                  alt="Example Image"
+                  style={styles.imageStyle}
+                  contain={true}
+                  noCache={false}
+                />
                 <View style={styles.desc}>
-                  <Text style={styles.title}>{product.name}</Text>
-                  <Text>Rs.{product.price}</Text>
-                  <Text>{product.quantity}. kg</Text>
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        color: theme === "dark" ? "white" : "black",
+                      },
+                    ]}
+                  >
+                    {product.name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                    }}
+                  >
+                    Rs.{product.price}
+                  </Text>
+                  <Text
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                    }}
+                  >
+                    {product.quantity}. kg
+                  </Text>
                 </View>
               </TouchableOpacity>
               <View>
-                <TouchableOpacity style={styles.deleteBtn}>
-                  <MaterialCommunityIcons name="delete" size={20} />
+                <TouchableOpacity
+                  style={styles.deleteBtn}
+                  onPress={() => handleDeleteBtn(product._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                    }}
+                  />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={styles.updateBtn}
                   onPress={() => cardUpdateHandler(product)}
                 >
-                  <MaterialIcons name="edit" size={20} />
+                  <MaterialIcons
+                    name="edit"
+                    size={20}
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
             </View>

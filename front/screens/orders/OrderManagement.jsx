@@ -1,12 +1,11 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState } from "react";
-import SellerOrderPlacementScreen from "../../components/order/SellerOrderPlacementScreen ";
 import OrderListComponent from "../../components/order/OrderListComponent ";
 import OrderDetails from "../../components/order/OrderDetails";
 import { OrderData } from "../../data/OrderData";
 import OrderChart from "./OrderChart";
-import Footer from "../../components/layout/Footer";
 import Layout from "../../components/layout/Layout";
+import { useSelector } from "react-redux";
 const OrderManagement = () => {
   const [orders, setOrders] = useState(OrderData);
 
@@ -17,9 +16,14 @@ const OrderManagement = () => {
     // Navigate to the order details page or show a modal
     // You can use navigation libraries like React Navigation for navigation
   };
-
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <Layout style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme === "dark" ? "#000" : "#fff" },
+      ]}
+    >
       {/* <SellerOrderPlacementScreen/> */}
 
       <View>
@@ -38,7 +42,7 @@ const OrderManagement = () => {
         <OrderListComponent orders={orders} onOrderPress={handleOrderPress} />
         {selectedOrder && <OrderDetails order={selectedOrder} />}
       </View>
-    </Layout>
+    </View>
   );
 };
 
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     borderRadius: 10,
     marginHorizontal: 10,
-    backgroundColor: "#000000",
+    backgroundColor: "#8c9386",
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: "#aea7a7",
+    color: "#282828",
     paddingBottom: 5,
   },
   value: {

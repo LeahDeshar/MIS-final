@@ -23,23 +23,25 @@ import DefaultProfileImage from "../components/DefaultProfileImage";
 import { BottomSheetModal } from "@gorhom/bottom-sheet/src";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { addProductToCart, toggleBookmark } from "../redux/productReducer";
+import Layout from "../components/layout/Layout";
 const ProductDetails = ({ route }) => {
   const navigation = useNavigation();
   const [proDetails, setProdetails] = useState({});
   const [qty, setQty] = useState(1);
   const [newComment, setNewComment] = useState("");
-
+  const auth = useSelector((state) => state.user.token);
   let token;
   useEffect(() => {
     const fetchToken = async () => {
       token = await AsyncStorage.getItem("@auth");
+      console.log(token);
     };
     fetchToken();
   }, []);
 
   const BottomRef = useRef(null);
   const handlePresentModalPress = () => {
-    if (token) {
+    if (token || auth) {
       BottomRef.current.present();
     } else {
       Alert.alert("Please Login", "You need to login to leave a review", [
@@ -99,7 +101,7 @@ const ProductDetails = ({ route }) => {
   );
 
   const handleBuyNow = () => {
-    if (token) {
+    if (token || auth) {
       navigation.navigate("Confirmation");
     } else {
       Alert.alert("Please Login", "You need to login to buy", [
@@ -113,7 +115,8 @@ const ProductDetails = ({ route }) => {
     }
   };
   const handleAddTocart = () => {
-    if (token) {
+    console.log(token);
+    if (token || auth) {
       if (product) {
         dispatch(addProductToCart({ product }));
         dispatch(toggleBookmark({ product }));
@@ -133,28 +136,26 @@ const ProductDetails = ({ route }) => {
   const theme = useSelector((state) => state.products.theme);
   return (
     <BottomSheetModalProvider>
-      <View
-        style={[
-          styles.outerContainer,
-          {
-            backgroundColor: theme === "dark" ? "#000" : "#fff",
-          },
-        ]}
+      <Layout
+      // style={[
+      //   styles.outerContainer,
+      //   {
+      //     backgroundColor: theme === "dark" ? "#000" : "#fff",
+      //   },
+      // ]}
       >
         <View>
           <View>
-            {proDetails &&
-              proDetails.images &&
-              proDetails.images.length > 0 && (
-                <>
-                  <AppImage
-                    source={{ uri: proDetails.images[0].url }}
-                    alt="Example Image"
-                    style={styles.image}
-                    noCache={false}
-                  />
-                </>
-              )}
+            {proDetails && proDetails.images && (
+              <>
+                <AppImage
+                  source={{ uri: proDetails?.images?.url }}
+                  alt="Example Image"
+                  style={styles.image}
+                  noCache={false}
+                />
+              </>
+            )}
             {/* <Image source={proDetails?.image} style={styles.image} /> */}
             <View style={styles.rateCategory}>
               <Text
@@ -307,7 +308,7 @@ const ProductDetails = ({ route }) => {
                   proDetails?.farmer?.profilePic &&
                   proDetails.farmer?.images?.length > 0 ? (
                     <AppImage
-                      source={{ uri: proDetails?.farmer?.profilePic.url }}
+                      source={{ uri: proDetails?.farmer?.profilePic?.url }}
                       alt="Example Image"
                       style={styles.image}
                       noCache={false}
@@ -428,7 +429,7 @@ const ProductDetails = ({ route }) => {
                           <View style={styles.card}>
                             {item.images && (
                               <AppImage
-                                source={{ uri: item?.images[0].url }}
+                                source={{ uri: item?.images?.url }}
                                 alt="Example Image"
                                 style={styles.cardImage}
                                 noCache={false}
@@ -455,9 +456,9 @@ const ProductDetails = ({ route }) => {
             </ScrollView>
           </View>
         </View>
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}>
           <Footer />
-        </View>
+        </View> */}
         <BottomSheetModal ref={BottomRef} index={0} snapPoints={[550]}>
           <View
             style={{
@@ -555,7 +556,7 @@ const ProductDetails = ({ route }) => {
             ))}
           </View>
         </BottomSheetModal>
-      </View>
+      </Layout>
     </BottomSheetModalProvider>
   );
 };

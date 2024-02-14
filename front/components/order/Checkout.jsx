@@ -24,6 +24,7 @@ import {
   setShipping,
 } from "../../redux/productReducer";
 import * as Notifications from "expo-notifications";
+import Layout from "../layout/Layout";
 
 const Checkout = () => {
   const navigation = useNavigation();
@@ -136,14 +137,8 @@ const Checkout = () => {
   };
   const theme = useSelector((state) => state.products.theme);
   return (
-    <View
-      style={{
-        paddingHorizontal: 7,
-        flex: 1,
-        backgroundColor: theme === "dark" ? "#000" : "#fff",
-      }}
-    >
-      <BottomSheetModalProvider>
+    <BottomSheetModalProvider>
+      <Layout>
         <View>
           <TouchableOpacity
             style={styles.button}
@@ -233,9 +228,9 @@ const Checkout = () => {
                 </View>
               </ScrollView>
 
-              <View style={{ bottom: 10 }}>
+              {/* <View style={{ bottom: 10 }}>
                 <Footer />
-              </View>
+              </View> */}
             </>
           )}
 
@@ -265,8 +260,8 @@ const Checkout = () => {
             />
           </BottomSheetModal>
         </View>
-      </BottomSheetModalProvider>
-    </View>
+      </Layout>
+    </BottomSheetModalProvider>
   );
 };
 

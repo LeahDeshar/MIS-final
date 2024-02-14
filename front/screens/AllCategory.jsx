@@ -10,6 +10,7 @@ import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppImage from "../components/AppImage";
+import Layout from "../components/layout/Layout";
 
 const AllCategory = () => {
   const navigation = useNavigation();
@@ -28,11 +29,14 @@ const AllCategory = () => {
   }, []);
 
   return (
-    <View style={styles.outerContainer}>
+    <Layout>
       <View style={styles.topCategory}>
         <Categories />
       </View>
-      <ScrollView showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        style={{ marginBottom: 150 }}
+      >
         <View style={styles.container}>
           {category?.map((item) => (
             <View key={item._id}>
@@ -58,11 +62,7 @@ const AllCategory = () => {
           ))}
         </View>
       </ScrollView>
-
-      <View style={styles.footer}>
-        <Footer />
-      </View>
-    </View>
+    </Layout>
   );
 };
 

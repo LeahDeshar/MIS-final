@@ -32,8 +32,9 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
     };
     fetchToken();
   }, []);
+  const auth = useSelector((state) => state.user.token);
   const handleBookmark = () => {
-    if (token) {
+    if (token || auth) {
       setBookmark(!isBookmarked);
       if (!isBookmarked) {
         console.log("add to cart");
@@ -68,15 +69,16 @@ const FeatureCard = React.memo(({ product, cardWidth, imgWidth }) => {
       onPress={() => navigation.navigate("Details", { product })}
     >
       <View>
-        {product && product.images && product.images.length > 0 && (
+        {product && product.images && (
           <>
-            <AppImage
-              source={{ uri: product.images[0].url }}
-              alt="Example Image"
-              style={[styles.cardImage, { width: imgWidth }]}
-              // contain={true}
-              noCache={false}
-            />
+            {product.images.url && (
+              <AppImage
+                source={{ uri: product.images.url }}
+                alt="Example Image"
+                style={[styles.cardImage, { width: imgWidth }]}
+                noCache={false}
+              />
+            )}
           </>
         )}
 

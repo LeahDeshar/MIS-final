@@ -30,7 +30,7 @@ const CartItem = ({ item }) => {
     <View style={styles.container}>
       <>
         <AppImage
-          source={{ uri: item?.images[0].url }}
+          source={{ uri: item?.images?.url }}
           alt="Example Image"
           style={styles.image}
           // contain={true}

@@ -11,6 +11,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Footer = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const role = useSelector((state) => state.user.role);
+  console.log("role", role);
   const [user, setUser] = useState("");
   // const user = 'seller'
   useEffect(() => {
@@ -21,16 +23,24 @@ const Footer = () => {
       // console.log("Role from AsyncStorage:", storedRole);
     };
     fetchRole();
-  }, []);
+  }, [user]);
 
-  const handlePlusButton = () => {
-    if (user === "customer") {
-      navigation.navigate("Forum");
+  const handlePlusButton = async () => {
+    token = await AsyncStorage.getItem("@auth");
+    if (token) {
+      console.log("token", token);
+      if (user === "farmer" || role === "farmer") {
+        navigation.navigate("CreateProduct");
+      } else {
+        navigation.navigate("Forum");
+      }
     } else {
-      navigation.navigate("CreateProduct");
+      navigation.navigate("login");
     }
   };
   const theme = useSelector((state) => state.products.theme);
+  // const role = useSelector((state) => state.products.theme);
+  console.log("user is", user);
 
   const handleNotification = async () => {
     // fetchDataFromStorage();
@@ -60,6 +70,16 @@ const Footer = () => {
 
     if (token) {
       navigation.navigate("Cart");
+    } else {
+      navigation.navigate("login");
+    }
+  };
+  const handleInOrders = async () => {
+    // fetchDataFromStorage();
+    token = await AsyncStorage.getItem("@auth");
+
+    if (token) {
+      navigation.navigate("InOrders");
     } else {
       navigation.navigate("login");
     }
@@ -133,7 +153,31 @@ const Footer = () => {
         {/* <Text style={styles.iconText}>Post</Text> */}
       </TouchableOpacity>
 
-      {user === "buyer" ? (
+      {user === "farmer" || role === "farmer" ? (
+        <TouchableOpacity style={styles.menuContainer} onPress={handleInOrders}>
+          <MaterialCommunityIcons
+            name="truck-outline"
+            style={[
+              styles.icon,
+              route.name === "Cart" && styles.active,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
+          />
+          <Text
+            style={[
+              styles.iconText,
+              route.name === "Cart" && styles.active,
+              {
+                color: theme === "dark" ? "#fff" : "#000",
+              },
+            ]}
+          >
+            Orders
+          </Text>
+        </TouchableOpacity>
+      ) : (
         <TouchableOpacity style={styles.menuContainer} onPress={handleCart}>
           <AntDesign
             name="shoppingcart"
@@ -155,33 +199,6 @@ const Footer = () => {
             ]}
           >
             Cart
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.menuContainer}
-          onPress={() => navigation.navigate("InOrders")}
-        >
-          <MaterialCommunityIcons
-            name="truck-outline"
-            style={[
-              styles.icon,
-              route.name === "Cart" && styles.active,
-              {
-                color: theme === "dark" ? "#fff" : "#000",
-              },
-            ]}
-          />
-          <Text
-            style={[
-              styles.iconText,
-              route.name === "Cart" && styles.active,
-              {
-                color: theme === "dark" ? "#fff" : "#000",
-              },
-            ]}
-          >
-            Orders
           </Text>
         </TouchableOpacity>
       )}

@@ -51,19 +51,26 @@ const AccountUser = ({ navigation }) => {
     await AsyncStorage.removeItem("@auth");
     await AsyncStorage.removeItem("@profile");
     await AsyncStorage.removeItem("@cart");
-
+    await AsyncStorage.removeItem("@role");
+    await AsyncStorage.removeItem("@myproducts");
     console.log("Logged out", auth);
     navigation.navigate("login");
   };
+
+  const [user, setUser] = useState("");
+  // const user = 'seller'
+  useEffect(() => {
+    const fetchRole = async () => {
+      const storedRoleString = await AsyncStorage.getItem("@role");
+      const storedRole = JSON.parse(storedRoleString);
+      setUser(storedRole);
+      // console.log("Role from AsyncStorage:", storedRole);
+    };
+    fetchRole();
+  }, []);
   return (
     <View style={styles.outerContainer}>
       <View style={styles.imageContainer}>
-        {/* <AppImage
-          source={{ uri: profile?.profilePic?.url }}
-          style={styles.image}
-          alt="Your Alt Text"
-          noCache={false}
-        /> */}
         <ImageBackground
           source={{ uri: profile?.profilePic?.url }}
           style={styles.image}
@@ -102,18 +109,24 @@ const AccountUser = ({ navigation }) => {
             Edit Profile
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate("myorders", { id: UserData._id })}
-        >
-          <AntDesign
-            name="bars"
-            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
-          />
-          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
-            My Orders
-          </Text>
-        </TouchableOpacity>
+        {user === "customer" && (
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() =>
+              navigation.navigate("myorders", { id: UserData._id })
+            }
+          >
+            <AntDesign
+              name="bars"
+              style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+            />
+            <Text
+              style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+            >
+              My Orders
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity
           style={styles.btn}
@@ -160,20 +173,24 @@ const AccountUser = ({ navigation }) => {
             Change Theme
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() =>
-            navigation.navigate("adminPanel", { id: UserData._id })
-          }
-        >
-          <AntDesign
-            name="windows"
-            style={theme === "dark" ? styles.darkbtnText : styles.btnText}
-          />
-          <Text style={theme === "dark" ? styles.darkbtnText : styles.btnText}>
-            Admin Panel
-          </Text>
-        </TouchableOpacity>
+        {user === "farmer" && (
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() =>
+              navigation.navigate("adminPanel", { id: UserData._id })
+            }
+          >
+            <AntDesign
+              name="windows"
+              style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+            />
+            <Text
+              style={theme === "dark" ? styles.darkbtnText : styles.btnText}
+            >
+              Admin Panel
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.btn}
           onPress={() =>

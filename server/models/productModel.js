@@ -14,7 +14,6 @@ const reviewSchema = new mongoose.Schema(
       ref: "Users",
       required: [true, "user id is required"],
     },
-    
   },
   { timestamps: true }
 );
@@ -43,12 +42,14 @@ const productSchema = new mongoose.Schema(
       ref: "Category",
       // type: String
     },
-    images: [
-      {
-        public_id: String,
-        url: String,
+    images: {
+      public_id: {
+        type: String,
       },
-    ],
+      url: {
+        type: String,
+      },
+    },
     farmer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",

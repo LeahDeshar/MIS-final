@@ -82,7 +82,7 @@ const Profile = ({ navigation }) => {
           type: "image/png",
           name: "profilePic.png",
         });
-
+        // console.log(formData);
         dispatch(UpdateUserProfileImage(formData));
       }
     } catch (error) {

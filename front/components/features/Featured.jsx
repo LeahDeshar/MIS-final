@@ -64,7 +64,7 @@ const Featured = () => {
                     navigation.navigate("Details", { _id: item._id })
                   }
                 >
-                  <FeatureCard product={item} />
+                  <FeatureCard product={item} cardWidth={200} />
                 </TouchableOpacity>
               </View>
             ))

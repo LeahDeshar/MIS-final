@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { getAllProducts } from "../../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppImage from "../AppImage";
+import Layout from "../layout/Layout";
 
 const AllNewProducts = () => {
   const navigation = useNavigation();
@@ -35,11 +36,14 @@ const AllNewProducts = () => {
     navigation.navigate("Product Details", { _id: id });
   };
   return (
-    <View style={styles.outerContainer}>
+    <Layout>
       <View style={styles.topCategory}>
         <Categories />
       </View>
-      <ScrollView showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        style={{ marginBottom: 150 }}
+      >
         <View style={styles.container}>
           {allproducts?.map((item) => (
             <View key={item._id}>
@@ -47,10 +51,10 @@ const AllNewProducts = () => {
                 style={styles.categoryContainer}
                 onPress={() => handleMoreBtn(item._id)}
               >
-                {item && item.images && item.images.length > 0 && (
+                {item && item.images && (
                   <>
                     <AppImage
-                      source={{ uri: item.images[0].url }}
+                      source={{ uri: item?.images?.url }}
                       alt="Example Image"
                       style={styles.imgStyle}
                       noCache={false}
@@ -65,10 +69,10 @@ const AllNewProducts = () => {
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <Footer />
-      </View>
-    </View>
+      </View> */}
+    </Layout>
   );
 };
 

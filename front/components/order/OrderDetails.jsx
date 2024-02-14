@@ -1,5 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
+import Layout from "../layout/Layout";
+import { useSelector } from "react-redux";
 
 const OrderDetails = ({ route }) => {
   // Assuming the route.params.order contains the details of the selected order
@@ -37,23 +39,49 @@ const OrderDetails = ({ route }) => {
     // Add more fields as needed
   };
 
-  console.log(order);
+  const theme = useSelector((state) => state.products.theme);
   return (
-    <ScrollView style={styles.container}>
+    <Layout style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.heading}>Order Information</Text>
-        <Text>Order Number: {order.orderNumber}</Text>
-        <Text>Date: {order.date}</Text>
-        <Text>Status: {order.status}</Text>
+        <Text
+          style={[
+            styles.heading,
+            { color: theme === "dark" ? "#fff" : "#000" },
+          ]}
+        >
+          Order Information
+        </Text>
+        <Text style={[{ color: theme === "dark" ? "#fff" : "#000" }]}>
+          Order Number: {order.orderNumber}
+        </Text>
+        <Text style={[{ color: theme === "dark" ? "#fff" : "#000" }]}>
+          Date: {order.date}
+        </Text>
+        <Text style={[{ color: theme === "dark" ? "#fff" : "#000" }]}>
+          Status: {order.status}
+        </Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.heading}>Items</Text>
+        <Text
+          style={[
+            styles.heading,
+            { color: theme === "dark" ? "#fff" : "#000" },
+          ]}
+        >
+          Items
+        </Text>
         {order.items.map((item) => (
           <View key={item.id}>
-            <Text>{item.name}</Text>
-            <Text>Quantity: {item.quantity}</Text>
-            <Text>Price: ${item.price}</Text>
+            <Text style={[{ color: theme === "dark" ? "#fff" : "#000" }]}>
+              {item.name}
+            </Text>
+            <Text style={[{ color: theme === "dark" ? "#fff" : "#000" }]}>
+              Quantity: {item.quantity}
+            </Text>
+            <Text style={[{ color: theme === "dark" ? "#fff" : "#000" }]}>
+              Price: ${item.price}
+            </Text>
           </View>
         ))}
       </View>
@@ -73,7 +101,7 @@ const OrderDetails = ({ route }) => {
       </View>
 
       {/* Add more sections for communication tools, refund/return processing, etc. based on your requirements */}
-    </ScrollView>
+    </Layout>
   );
 };
 

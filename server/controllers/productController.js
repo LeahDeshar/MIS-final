@@ -53,7 +53,26 @@ export const getAllProductController = async (req, res) => {
     });
   }
 };
+export const getAllFromSpecFarmerProductController = async (req, res) => {
+  try {
+    console.log(req.user._id);
+    const products = await Products.find({ farmer: req.user })
+      .populate("farmer")
+      .populate("category");
 
+    return res.status(200).json({
+      success: true,
+      products: products,
+      total: products.length,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching products",
+      error: error.message,
+    });
+  }
+};
 // controller to get all top products
 export async function getTopProductController(req, res) {
   try {
@@ -105,26 +124,13 @@ export async function getOneProductController(req, res) {
 export async function createproductController(req, res) {
   try {
     const { name, description, price, categoryId, quantity } = req.body;
+
     if (!name || !description || !price || !quantity || !categoryId) {
       return res.status(400).json({
         success: false,
         message: "Please fill all the fields",
       });
     }
-
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "Please upload a file",
-      });
-    }
-    const file = getDataUri(req.file);
-
-    const result = await cloudinary.v2.uploader.upload(file.content);
-    const image = {
-      public_id: result.public_id,
-      url: result.secure_url,
-    };
 
     const newProduct = await Products.create({
       name,
@@ -133,7 +139,6 @@ export async function createproductController(req, res) {
       category: categoryId,
       quantity,
       farmer: req.user,
-      images: [image],
     });
 
     const populatedProduct = await Products.findById(newProduct._id)
@@ -146,6 +151,7 @@ export async function createproductController(req, res) {
       products: populatedProduct,
     });
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({
       success: false,
       message: "Error in product api " + error.message,
@@ -163,14 +169,14 @@ export async function updateProductController(req, res) {
         message: "Product not found",
       });
     }
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, quantity } = req.body;
     console.log(req.body);
     // validation
     if (name) product.name = name;
     if (description) product.description = description;
     if (price) product.price = price;
     if (category) product.category = category;
-    if (stock) product.stock = stock;
+    if (quantity) product.quantity = quantity;
 
     await product.save();
     return res.status(200).json({
@@ -185,48 +191,89 @@ export async function updateProductController(req, res) {
     });
   }
 }
-
-// update the image
-export async function updateImageProductController(req, res) {
+export const updateImageProductController = async (req, res) => {
   try {
     const product = await Products.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-    // file validation
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "Please upload a file",
-      });
-    }
+    console.log(req.params);
+    // get the photo from client
     const file = getDataUri(req.file);
+    console.log(req.params.id);
+    console.log(req.file);
+    // Check if user has a profile picture already
+    if (product && product.images && product.images.public_id) {
+      // Delete previous profile picture from Cloudinary
+      await cloudinary.v2.uploader.destroy(product.images.public_id);
+    }
 
-    const result = await cloudinary.v2.uploader.upload(file.content);
-    const image = {
-      public_id: result.public_id,
-      url: result.secure_url,
+    // Upload new profile picture to Cloudinary
+    const cdb = await cloudinary.v2.uploader.upload(file.content);
+
+    // Update user's profile picture
+    product.images = {
+      public_id: cdb.public_id,
+      url: cdb.secure_url,
     };
-    product.images.push(image);
+
+    // Save user
     await product.save();
+
     return res.status(200).json({
+      message: "Image added successfully",
       success: true,
-      message: "Product Image updated",
-      // product
+      product,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
+      msg: "Internal Error (profile pic update)",
       success: false,
-      message: "Error in product api " + error.message,
+      error,
     });
   }
-}
+};
+
+// update the image
+// export async function updateImageProductController(req, res) {
+//   try {
+//     const product = await Products.findById(req.params.id);
+//     if (!product) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Product not found",
+//       });
+//     }
+//     // file validation
+//     if (!req.file) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Please upload a file",
+//       });
+//     }
+//     const file = getDataUri(req.file);
+
+//     const result = await cloudinary.v2.uploader.upload(file.content);
+//     const image = {
+//       public_id: result.public_id,
+//       url: result.secure_url,
+//     };
+//     product.images.push(image);
+//     await product.save();
+//     return res.status(200).json({
+//       success: true,
+//       message: "Product Image updated",
+//       // product
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error in product api " + error.message,
+//     });
+//   }
+// }
 
 export async function deleteProductController(req, res) {
   try {
+    console.log(req.params.id);
     const product = await Products.findById(req.params.id);
     if (!product) {
       return res.status(404).json({

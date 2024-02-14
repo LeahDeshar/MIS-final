@@ -54,15 +54,17 @@ const Recommend = () => {
             <View key={item._id}>
               <TouchableOpacity style={styles.categoryContainer}>
                 <View style={styles.card}>
-                  {item && item.images && item.images.length > 0 && (
+                  {item && item.images && (
                     <>
-                      <AppImage
-                        source={{ uri: item.images[0].url }}
-                        alt="Example Image"
-                        style={styles.cardImage}
-                        // contain={true}
-                        noCache={false}
-                      />
+                      {item.images.url && (
+                        <AppImage
+                          source={{ uri: item?.images?.url }}
+                          alt="Example Image"
+                          style={styles.cardImage}
+                          // contain={true}
+                          noCache={false}
+                        />
+                      )}
                     </>
                   )}
                   <View style={styles.cardDetail}>
@@ -92,12 +94,11 @@ export default Recommend;
 
 const styles = StyleSheet.create({
   outerContainer: {
-    // marginBottom: 300
+    marginBottom: 100,
   },
   container: {
     padding: 5,
     paddingTop: 25,
-    // flexDirection: "row",
   },
   featureContainer: {
     marginHorizontal: 22,

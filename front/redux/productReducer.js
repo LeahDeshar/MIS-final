@@ -163,7 +163,13 @@ export const {
 export default productSlice.reducer;
 
 export const allProductReducer = createReducer(
-  { allproduct: null, topproduct: null, oneproduct: null, error: null },
+  {
+    allproduct: null,
+    topproduct: null,
+    oneproduct: null,
+    error: null,
+    createproduct: null,
+  },
   (builder) => {
     //  Get All Product Data
     builder.addCase("getAllProductRequest", (state, action) => {
@@ -209,6 +215,76 @@ export const allProductReducer = createReducer(
     builder.addCase("getOneProductFail", (state, action) => {
       console.log("picked One Product");
       // state.isAuth = false;
+      state.error = action.payload;
+    });
+
+    //  Get my Product Data
+    builder.addCase("getmyProductRequest", (state, action) => {
+      console.log("load my Product");
+      state.loading = true;
+    });
+    builder.addCase("getmyProductSuccess", (state, action) => {
+      state.loading = false;
+      // state.isAuth = true;
+      state.myproduct = action.payload;
+    });
+    builder.addCase("getmyProductFail", (state, action) => {
+      console.log("picked my Product");
+      // state.isAuth = false;
+      state.error = action.payload;
+    });
+    // create the products
+    builder.addCase("createProductRequest", (state, action) => {
+      console.log("load AllProduct");
+      state.loading = true;
+    });
+    builder.addCase("createProductSuccess", (state, action) => {
+      state.loading = false;
+      state.createproduct = action.payload;
+    });
+    builder.addCase("createProductFail", (state, action) => {
+      console.log("picked AllProduct");
+      state.error = action.payload;
+    });
+
+    // create the products
+    builder.addCase("deleteProductRequest", (state, action) => {
+      console.log("load delete");
+      state.loading = true;
+    });
+    builder.addCase("deleteProductSuccess", (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+    });
+    builder.addCase("deleteProductFail", (state, action) => {
+      console.log("picked delete");
+      state.error = action.payload;
+    });
+
+    // add the image of the products
+    builder.addCase("addImageProductRequest", (state, action) => {
+      console.log("load AllProduct");
+      state.loading = true;
+    });
+    builder.addCase("addImageProductSuccess", (state, action) => {
+      state.loading = false;
+      state.createproduct = action.payload;
+    });
+    builder.addCase("addImageProductFail", (state, action) => {
+      console.log("picked AllProduct");
+      state.error = action.payload;
+    });
+
+    builder.addCase("updateProductRequest", (state, action) => {
+      console.log("load AllProduct");
+      state.loading = true;
+    });
+    builder.addCase("updateProductSuccess", (state, action) => {
+      state.loading = false;
+      state.createproduct = action.payload;
+    });
+    builder.addCase("updateProductFail", (state, action) => {
+      console.log("picked update");
       state.error = action.payload;
     });
   }

@@ -7,7 +7,7 @@ const OrderItem = ({ order }) => {
   return (
     <View style={styles.container}>
       <AppImage
-        source={{ uri: order?.images[0]?.url }}
+        source={{ uri: order?.images?.url }}
         alt="Example Image"
         style={styles.image}
         // contain={true}

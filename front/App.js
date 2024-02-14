@@ -50,6 +50,7 @@ import { AppRegistry } from "react-native";
 import { LogBox } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SplashScreens from "./screens/SplashScreens";
+import ProductListing1 from "./screens/seller/ProductListing1";
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
 ]);
@@ -220,6 +221,7 @@ const App = () => {
                 headerStyle: {
                   backgroundColor: "#ADBC9F",
                 },
+                headerLeft: null,
               }}
             />
             <Stack.Screen
@@ -316,6 +318,18 @@ const App = () => {
                 headerStyle: {
                   backgroundColor: "#ADBC9F",
                 },
+                headerLeft: null,
+              }}
+            />
+            <Stack.Screen
+              name="CreateProduct1"
+              component={ProductListing1}
+              options={{
+                title: "Add New",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+                headerLeft: null,
               }}
             />
 
@@ -327,6 +341,7 @@ const App = () => {
                   backgroundColor: "#ADBC9F",
                 },
                 title: "Order Management",
+                headerLeft: null,
               }}
             />
             <Stack.Screen
@@ -345,10 +360,21 @@ const App = () => {
                   backgroundColor: "#ADBC9F",
                 },
                 title: "My Product List",
+                headerLeft: null,
               }}
             />
 
-            <Stack.Screen name="orderDetails" component={OrderDetails} />
+            <Stack.Screen
+              name="orderDetails"
+              component={OrderDetails}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+                title: "Order Detail",
+                headerLeft: null,
+              }}
+            />
 
             <Stack.Screen
               name="updateMyProduct"
@@ -358,10 +384,20 @@ const App = () => {
                 headerStyle: {
                   backgroundColor: "#ADBC9F",
                 },
-                // headerLeft: () => <Text style={{color: 'blue', fontSize: 20, marginLeft: 10}}>Cancel</Text>,
+                headerLeft: null,
               }}
             />
-            <Stack.Screen name="MyProDet" component={MyProductDetail} />
+            <Stack.Screen
+              name="MyProDet"
+              component={MyProductDetail}
+              options={{
+                title: "Details",
+                headerStyle: {
+                  backgroundColor: "#ADBC9F",
+                },
+                headerLeft: null,
+              }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchDataFromStorage } from "../components/auth/localstorage";
+import { getAllProducts } from "./productAction";
 export const useReduxStateHook = (navigation, path = "login") => {
   const { loading, error, msg } = useSelector((state) => state.user);
 
@@ -12,6 +13,7 @@ export const useReduxStateHook = (navigation, path = "login") => {
     }
     if (msg) {
       alert(msg);
+      dispatch(getAllProducts());
       dispatch({ type: "clearMessage" });
       navigation.reset({
         index: 0,

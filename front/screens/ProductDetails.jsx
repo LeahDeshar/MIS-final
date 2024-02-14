@@ -114,7 +114,7 @@ const ProductDetails = ({ route }) => {
       <BottomSheetModalProvider>
         <View>
           <View>
-            <Image source={proDetails?.image} style={styles.image} />
+            <Image source={proDetails?.images.url} style={styles.image} />
             <TouchableOpacity
               style={{ position: "absolute", right: 20, top: 10 }}
             >

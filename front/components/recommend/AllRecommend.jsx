@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { getAllProducts } from "../../redux/productAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppImage from "../AppImage";
+import Layout from "../layout/Layout";
 
 const AllRecommend = () => {
   const navigation = useNavigation();
@@ -31,12 +32,12 @@ const AllRecommend = () => {
     fetchData();
   }, []);
   return (
-    <View style={styles.outerContainer}>
+    <Layout>
       <View>
         <Categories />
       </View>
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView style={{ marginBottom: 100 }}>
           {allproducts?.map((item) => (
             <View key={item._id}>
               <TouchableOpacity
@@ -47,10 +48,10 @@ const AllRecommend = () => {
               >
                 <View style={styles.card}>
                   {/* <Image source={item.image} style={styles.cardImage} /> */}
-                  {item && item.images && item.images.length > 0 && (
+                  {item && item.images && (
                     <>
                       <AppImage
-                        source={{ uri: item.images[0].url }}
+                        source={{ uri: item?.images?.url }}
                         alt="Example Image"
                         style={styles.cardImage}
                         // contain={true}
@@ -68,10 +69,7 @@ const AllRecommend = () => {
           ))}
         </ScrollView>
       </View>
-      <View style={styles.footer}>
-        <Footer />
-      </View>
-    </View>
+    </Layout>
   );
 };
 
@@ -97,8 +95,8 @@ const styles = StyleSheet.create({
   cardImage: {
     height: 90,
     width: 90,
-    // width: "100%",
-    // marginBottom: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   card: {
     flexDirection: "row",
@@ -131,6 +129,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.09,
     shadowRadius: 4,
+    height: 90,
+    borderRadius: 10,
   },
   footer: {
     bottom: -280,
