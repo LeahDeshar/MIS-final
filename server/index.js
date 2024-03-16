@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import colors from "colors";
 import { rateLimit } from "express-rate-limit";
 
@@ -10,6 +10,7 @@ import router from "./routes/userRoutes.js";
 import productRouter from "./routes/productRoutes.js";
 import categoryRouter from "./routes/categoryRoute.js";
 import orderRouter from "./routes/orderRoutes.js";
+import emailRouter from "./routes/emailRouter.js";
 import helmet from "helmet";
 import nodemailer from "nodemailer";
 import ExpressMongoSanitize from "express-mongo-sanitize";
@@ -25,39 +26,58 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   auth: {
-//     user: "johndoetree67@gmail.com",
-//     pass: "fourtyOnef0urty2",
-//   },
-// });
+const transport = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "174d98c654e2ce",
+    pass: "69458ffa23121b",
+  },
+});
 
-// // Function to send email
-// const sendEmail = async (recipient, subject, htmlContent) => {
-//   try {
-//     // Send mail with defined transport object
-//     const info = await transporter.sendMail({
-//       from: "johndoetree67@gmail.com",
-//       to: recipient,
-//       subject: subject,
-//       html: htmlContent,
-//     });
+const sendEmail = async (recipient, subject, htmlContent) => {
+  try {
+    // Send mail with defined transport object
+    const info = await transport.sendMail({
+      from: "johndoetree67@gmail.com",
+      to: recipient,
+      subject: subject,
+      html: htmlContent,
+    });
 
-//     console.log("Email sent: " + info.response);
-//   } catch (error) {
-//     console.error("Error sending email:", error);
-//   }
-// };
+    console.log("Email sent: " + info.response);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
+const emailrouter = express.Router();
+emailrouter.get("/sendEmail", async (req, res) => {
+  const orderConfirmationEmail = `
+    <p>Dear Customer,</p>
+    <p>Your order has been confirmed by the seller. Thank you for shopping with us!</p>
+    <p>Best regards,<br/>CultiVista</p>
+  `;
 
-// // Example usage
-// const orderConfirmationEmail = `
-//   <p>Dear User,</p>
-//   <p>Your order has been confirmed by the seller. Thank you for shopping with us!</p>
-//   <p>Best regards,<br/>Your Shop</p>
-// `;
+  try {
+    // Send the email
+    await sendEmail(
+      "johndoetree67@gmail.com",
+      "Order Confirmation",
+      orderConfirmationEmail
+    );
 
-// sendEmail("user@example.com", "Order Confirmation", orderConfirmationEmail);
+    res.status(200).json({
+      success: true,
+      message: "Email Sent Successfully",
+    });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Email Sending failed",
+    });
+  }
+});
 // // cloudinary config
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -65,71 +85,6 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-// export default class Email {
-//   constructor(user, url) {
-//     this.to = user.email;
-//     this.firstName = user.name.split(" ")[0];
-//     this.url = url;
-//     this.from = `Jonas Schmedtmann <${process.env.EMAIL_FROM}>`;
-//   }
-
-//   newTransport() {
-//     if (process.env.NODE_ENV === "production") {
-//       // Sendgrid
-//       return nodemailer.createTransport({
-//         service: "SendGrid",
-//         auth: {
-//           user: "johndoetree67@gmail.com",
-//           pass: "fourtyOnef0urty2",
-//         },
-//       });
-//     }
-
-//     return nodemailer.createTransport({
-//       host: "smtp.mailtrap.io",
-//       port: 25,
-//       auth: {
-//         user: "johndoetree67@gmail.io",
-//         pass: "fourtyOnef0urty2",
-//       },
-//     });
-//   }
-
-//   // Send the actual email
-//   async send(subject, message) {
-//     // Define email options
-//     const mailOptions = {
-//       from: this.from,
-//       to: this.to,
-//       subject,
-//       text: message,
-//     };
-//     try {
-//       // Create a transport and send email
-//       await this.newTransport().sendMail(mailOptions);
-//       console.log("Email sent successfully!");
-//     } catch (error) {
-//       console.error("Error sending email:", error);
-//     }
-
-//     // Create a transport and send email
-//     // await this.newTransport().sendMail(mailOptions);
-//   }
-
-//   async sendWelcome() {
-//     await this.send(
-//       "Welcome to the Natours Family!",
-//       `Hello ${this.firstName},\nWelcome to our community. We are excited to have you with us.`
-//     );
-//   }
-
-//   async sendPasswordReset() {
-//     await this.send(
-//       "Password Reset Request",
-//       `Hi ${this.firstName},\nPlease click on the following link to reset your password: ${this.url}\nIf you did not request this, please ignore this email.`
-//     );
-//   }
-// }
 connectDB();
 
 // stripe configuration
@@ -143,7 +98,9 @@ app.use("/api/v1/user", router);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/order", orderRouter);
+app.use("/api/v1", emailrouter);
 
+// app.use("/api/v1/email", emailRouter);
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(

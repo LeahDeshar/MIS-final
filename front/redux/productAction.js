@@ -31,7 +31,28 @@ export const getAllProducts = () => async (dispatch) => {
     });
   }
 };
+export const sendEmail = () => async (dispatch) => {
+  try {
+    console.log("send email");
 
+    dispatch({
+      type: "sendEmailRequest",
+    });
+    const { data } = await axios.get(`${server}/sendEmail`, {
+      "Content-Type": "application/json",
+    });
+    dispatch({
+      type: "sendEmailSuccess",
+      payload: data?.message,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: "sendEmailFail",
+      payload: error.response.data.message,
+    });
+  }
+};
 export const getTop6Products = () => async (dispatch) => {
   try {
     console.log("get Top 6 Products");

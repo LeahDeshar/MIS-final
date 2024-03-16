@@ -186,6 +186,21 @@ export const allProductReducer = createReducer(
       state.error = action.payload;
     });
 
+    //  send email
+    builder.addCase("sendEmailRequest", (state, action) => {
+      console.log("load sendEmailRequest");
+      state.loading = true;
+    });
+    builder.addCase("sendEmailSuccess", (state, action) => {
+      state.loading = false;
+      // state.isAuth = true;
+      state.message = action.payload;
+    });
+    builder.addCase("sendEmailFail", (state, action) => {
+      console.log("sendEmailFail");
+      state.error = action.payload;
+    });
+
     //  Get Top 6 Product Data
     builder.addCase("getTopProductRequest", (state, action) => {
       console.log("load Top Product");

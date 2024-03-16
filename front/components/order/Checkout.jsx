@@ -25,6 +25,7 @@ import {
 } from "../../redux/productReducer";
 import * as Notifications from "expo-notifications";
 import Layout from "../layout/Layout";
+import { sendEmail } from "../../redux/productAction";
 
 const Checkout = () => {
   const navigation = useNavigation();
@@ -113,6 +114,7 @@ const Checkout = () => {
   //   });
   // };
   const sendNotification = async () => {
+    dispatch(sendEmail());
     const notificationTime = new Date();
     notificationTime.setSeconds(notificationTime.getSeconds() + 10);
     Notifications.setNotificationHandler({
