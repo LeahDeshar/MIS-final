@@ -1,1 +1,6 @@
 .expo
+server/middlewares/
+server/db/
+server/node_modules
+server/.env
+
